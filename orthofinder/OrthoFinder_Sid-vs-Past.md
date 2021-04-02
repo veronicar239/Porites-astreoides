@@ -59,7 +59,6 @@ The default, and fastest, version of OrthoFinder uses DIAMOND [24] for sequence 
 - Host (Kenkel) reference, longest isoform with >500 bp length threshold
 > /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/
 
-***CONTINUE HERE***
 
 Just longest isoform assembly, or also filter for >500 bp length?
 
@@ -83,43 +82,57 @@ contigs >= 1000bp = 2911
 contigs >= 2000bp = 273
 ```
 
+#### Add suffix
+```
+/cm/shared/courses/dbarshis/barshislab/VRad/taxons/Porites_astreoides/Paytan/P_ast/refassembly/P_ast_Kenkel/addsuffixtofastaseqnames.py Past 29422_past_LongestContig.fasta
+```
+
+cp 29422_past_LongestContig_suffixed.fasta /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/
+
 #### Filter by length threshold (>500 bp)
 
 ```
-/cm/shared/courses/dbarshis/15AdvBioinf/classdata/Siderastrea_radians/QCFastqs/nofilter/newpaired/trinity_out_PE-150_SE-150_control-pop/fasta_len_filter.py 500 500lnThresh ******
+/cm/shared/courses/dbarshis/15AdvBioinf/classdata/Siderastrea_radians/QCFastqs/nofilter/newpaired/trinity_out_PE-150_SE-150_control-pop/fasta_len_filter.py 500 500lnThresh 29422_past_LongestContig.fasta
 ```
+
+Output: 
+- Number of total seqs for 29422_past_LongestContig.fasta: 29422
+- Number of seqs over 500 for 29422_past_LongestContig.fasta: 10715
 
 **Best practice to rename with contig number**
 
-grep -c ">" 
+grep -c ">" 29422_past_LongestContig500lnThresh.fasta
+10714
 
-
-cp 
+mv 29422_past_LongestContig500lnThresh.fasta 10714_past_LongestContig_500ln.fasta
 
 
 #### Add suffix
 ```
-/cm/shared/courses/dbarshis/barshislab/VRad/taxons/Porites_astreoides/Paytan/P_ast/refassembly/P_ast_Kenkel/addsuffixtofastaseqnames.py Past ******
-```
-
-(suffixed)
-grep ">" -c ******
-
-(copy suffixed)
-
-```
-cp /cm/shared/courses/dbarshis/barshislab/VRad/taxons/Porites_astreoides/Paytan/P_ast/refassembly/P_ast_full_Kenkel_2014/pastreoides_may2014/29422_past_LongestContig.fasta /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/
+/cm/shared/courses/dbarshis/barshislab/VRad/taxons/Porites_astreoides/Paytan/P_ast/refassembly/P_ast_Kenkel/addsuffixtofastaseqnames.py Past 10714_past_LongestContig_500ln.fasta
 ```
 
 ```
-/cm/shared/courses/dbarshis/18AdvBioinf/scripts/avg_cov_len_fasta_advbioinf.py ******
+cp /cm/shared/courses/dbarshis/barshislab/VRad/taxons/Porites_astreoides/Paytan/P_ast/refassembly/P_ast_full_Kenkel_2014/pastreoides_may2014/10714_past_LongestContig_500ln_suffixed.fasta /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/
 ```
 
 ```
-
+/cm/shared/courses/dbarshis/18AdvBioinf/scripts/avg_cov_len_fasta_advbioinf.py 10714_past_LongestContig_500ln_suffixed.fasta
 ```
 
-***FINISH HERE***
+```
+The total number of sequences is 10714
+The average sequence length is 894
+The total number of bases is 9585005
+The minimum sequence length is 500
+The maximum sequence length is 8171
+The N50 is 908
+Median Length = 510
+contigs < 150bp = 0
+contigs >= 500bp = 10714
+contigs >= 1000bp = 2911
+contigs >= 2000bp = 273
+```
 
 
 ### Symbiodinium microadriaticum (A1)
@@ -332,11 +345,11 @@ I decided to run OrthoFinder separately for hosts versus symbionts.
 
 
 ----------------------------------------------------------------------------------------------
-## Host ortholog identification
+## Host ortholog identification - part A
+
+Comparing Sid and Past longest Contig assembly
 
 > /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/
-
-***Need to run this when have Past longest isoform assembly***
 
 ```
 nano orthofinder_host.sh
@@ -349,12 +362,12 @@ nano orthofinder_host.sh
 #SBATCH -n 6
 #SBATCH --mail-user=vradice@odu.edu
 #SBATCH --mail-type=ALL
-#SBATCH --job-name=orthofinder_host_b
+#SBATCH --job-name=orthofinder_host
 
 enable_lmod
 module load container_env orthofinder/2.5.2
 
-crun orthofinder -f /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/ -d -t 24
+crun orthofinder -f /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/Sid.v.Past_longestContig -d -t 24
 ```
 
 ```
@@ -362,7 +375,41 @@ sbatch orthofinder_host.sh
 ```
 
 **Results:**
-> /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/OrthoFinder/
+> /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/Sid.v.Past_longestContig/OrthoFinder/
+
+
+----------------------------------------------------------------------------------------------
+## Host ortholog identification - part B
+
+Comparing Sid and Past longest Contig assembly >500 bp length assemblies
+
+> /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/Sid.v.Past_longestContig_500ln/
+
+```
+nano orthofinder_host_b.sh
+```
+
+```
+#!/bin/bash -l
+
+#SBATCH -o orthofinder_host_b.txt
+#SBATCH -n 6
+#SBATCH --mail-user=vradice@odu.edu
+#SBATCH --mail-type=ALL
+#SBATCH --job-name=orthofinder_host_b
+
+enable_lmod
+module load container_env orthofinder/2.5.2
+
+crun orthofinder -f /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/Sid.v.Past_longestContig_500ln/ -d -t 24
+```
+
+```
+sbatch orthofinder_host_b.sh
+```
+
+**Results:**
+> /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/Sid.v.Past_longestContig_500ln/OrthoFinder/
 
 
 ----------------------------------------------------------------------------------------------
