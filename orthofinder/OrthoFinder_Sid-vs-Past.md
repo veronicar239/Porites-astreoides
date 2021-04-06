@@ -13,12 +13,39 @@ tags: [Transcriptome, Bioinformatics, Ortholog]
 - genes in different species that evolved from a common ancestral gene
 - are thought to retain the same function in the course of evolution
 
+### Orthogroups & Orthologs
+
+**Orthologs** are pairs of genes that descended from a single gene in the last common ancestor (LCA) of two species. 
+
+An orthogroup is the extension of the concept of orthology to groups of species. 
+An **orthogroup** is the group of genes descended from a single gene in the LCA of a group of species.
+
+### Why Orthogroups
+
+Orthogroups allow you to analyse all of your data
+
+All of the genes in an orthogroup are descended from a single ancestral gene. Thus, **all the genes in an orthogroup started out with the same sequence and function.** As gene duplication and loss occur frequently in evolution, one-to-one orthologs are rare and limitation of analyses to on-to-one orthologs limits an analysis to a small fraction of the available data. By analysing orthogroups you can analyse all of your data.
+
+##### Orthogroups allow you to define the unit of comparison
+
+It is important to note that with orthogroups you choose where to define the limits of the unit of comparison. For example, if you just chose to analyse human and mouse in the above figure then you would have two orthogroups.
+Orthogroups are the only way to identify orthologs.
+
+Orthology is defined by phylogeny. It is not definable by amino acid content, codon bias, GC content or other measures of sequence similarity. Methods that use such scores to define orthologs in the absence of phylogeny can only provide guesses. The only way to be sure that the orthology assignment is correct is by conducting a phylogenetic reconstruction of all genes descended from a single gene the last common ancestor of the species under consideration. This set of genes is an orthogroup. Thus, the only way to define orthology is by analysing orthogroups.
+
 
 ### Method:  OrthoFinder
 OrthoFinder is a software program for phylogenetic orthology inference.
 
 [OrthoFinder GitHub](https://github.com/davidemms/OrthoFinder)
 [OrthoFinder Tutorials](https://davidemms.github.io/)
+
+[Running example OrthoFinder analysis](https://davidemms.github.io/orthofinder_tutorials/running-an-example-orthofinder-analysis.html)
+[OrthoFinder best practices](https://davidemms.github.io/orthofinder_tutorials/orthofinder-best-practices.html)
+[Exploring OrthoFinder results](https://davidemms.github.io/orthofinder_tutorials/exploring-orthofinders-results.html)
+[What OrthoFinder provides](https://github.com/davidemms/OrthoFinder#what-orthofinder-provides)
+[Orthogroups, orthologs, paralogs](https://github.com/davidemms/OrthoFinder/#orthogroups-orthologs--paralogs)
+
 
 ### References
 
@@ -374,8 +401,54 @@ crun orthofinder -f /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofind
 sbatch orthofinder_host.sh
 ```
 
+> /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/Sid.v.Past_longestContig/
+```
+cat orthofinder_host.txt
+```
+Ran blast_nucl all-versus-all
+
+```
+Writing orthogroups to file
+---------------------------
+OrthoFinder assigned 13060 genes (26.8% of total) to 4319 orthogroups. Fifty percent of all genes were in orthogroups with 1 or more genes (G50 was 1) and were contained in the largest 15581 orthogroups (O50 was 15581). There were 2026 orthogroups with all species present and 1472 of these consisted entirely of single-copy genes.
+```
+
+*OrthoFinder note:  In general it’s nice to see at least 80% of your genes assigned to orthogroups. Fewer than this means that you are probably missing orthology relationships that actually exist for some of the remaining genes, poor species sampling is the most likely cause for this.*
+...I think this is for organisms that are better sequenced/ annotated than corals...
+
+
 **Results:**
 > /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/Sid.v.Past_longestContig/OrthoFinder/
+
+> /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/Sid.v.Past_longestContig/OrthoFinder/Results_Apr02/Comparative_Genomics_Statistics/
+There's a tab-delimited file called Comparative_Genomics_Statistics/Statistics_PerSpecies.tsv. Like other “.tsv” files from OrthoFinder this is best viewed in a spreadsheet program like Excel.
+
+#### Orthologues directory
+
+One of the most common reasons for running OrthoFinder is to find the orthologue of a gene you’re interested in.
+
+> /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/Sid.v.Past_longestContig/OrthoFinder/Results_Apr02/Orthologues/Orthologues_29422_past_LongestContig_suffixed/
+
+File:  29422_past_LongestContig_suffixed__v__19222_Sid_GoodCoral_500lnThresh_Final.tsv
+
+
+#### Orthogroups
+
+> /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/Sid.v.Past_longestContig/OrthoFinder/Results_Apr02/Orthogroups/
+
+Often we’re interested in group-wise species comparisons, that is comparisons across a clade of species rather than between a pair of species. The generalisation of orthology to multiple species is the orthogroup. Just like orthologues are the genes descended from a single gene in the last common ancestor of a pair of species **an orthogroup is the set of genes descended from a single gene in a group of species.** 
+
+Each gene tree from OrthoFinder, for example the one above, is for one orthogroup. The orthogroup gene tree is the tree we need to look at if we want it to include all pairwise orthologues. And even though some of the genes within an orthogroup can be paralogs of one another, if we tried to take any genes out then we would also be removing orthologs too.
+
+So if we want to do a comparison of the ‘equivalent’ genes in a set of species, we need to do the comparison across the genes in an othogroup. The orthogroups are in the file Orthogroups/Orthogroups.tsv. This table has one orthogroup per line and one spcies per column and is ordered from largest orthogroup to smallest.
+
+#### Orthogroup Sequences
+
+> /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/Sid.v.Past_longestContig/OrthoFinder/Results_Apr02/Orthogroup_Sequences/
+
+For each orthogroup there is a FASTA file in Orthogroup_Sequences/ which contains the sequences for the genes in that orthogroup.
+
+
 
 
 ----------------------------------------------------------------------------------------------
@@ -408,8 +481,54 @@ crun orthofinder -f /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofind
 sbatch orthofinder_host_b.sh
 ```
 
+> /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/Sid.v.Past_longestContig_500ln/
+```
+cat orthofinder_host_b.txt
+```
+Ran blast_nucl all-versus-all
+
+```
+Writing orthogroups to file
+---------------------------
+OrthoFinder assigned 9500 genes (31.7% of total) to 3005 orthogroups. Fifty percent of all genes were in orthogroups with 1 or more genes (G50 was 1) and were contained in the largest 8473 orthogroups (O50 was 8473). There were 1267 orthogroups with all species present and 926 of these consisted entirely of single-copy genes.
+```
+
+*OrthoFinder note:  In general it’s nice to see at least 80% of your genes assigned to orthogroups. Fewer than this means that you are probably missing orthology relationships that actually exist for some of the remaining genes, poor species sampling is the most likely cause for this.*
+...I think this is for organisms that are better sequenced/ annotated than corals...
+
+
 **Results:**
 > /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/Sid.v.Past_longestContig_500ln/OrthoFinder/
+
+There's a tab-delimited file called Comparative_Genomics_Statistics/Statistics_PerSpecies.tsv. Like other “.tsv” files from OrthoFinder this is best viewed in a spreadsheet program like Excel.
+
+cp /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/Sid.v.Past_longestContig_500ln/OrthoFinder/Results_Apr02/Comparative_Genomics_Statistics/Statistics_PerSpecies.tsv ./
+
+#### Orthologues directory
+
+One of the most common reasons for running OrthoFinder is to find the orthologue of a gene you’re interested in.
+
+> /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/Sid.v.Past_longestContig_500ln/OrthoFinder/Results_Apr02/Orthologues/Orthologues_10714_past_LongestContig_500ln_suffixed/
+
+File:  10714_past_LongestContig_500ln_suffixed__v__19222_Sid_GoodCoral_500lnThresh_Final.tsv
+
+
+#### Orthogroups
+
+> /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/Sid.v.Past_longestContig_500ln/OrthoFinder/Results_Apr02/Orthogroups/
+
+Often we’re interested in group-wise species comparisons, that is comparisons across a clade of species rather than between a pair of species. The generalisation of orthology to multiple species is the orthogroup. Just like orthologues are the genes descended from a single gene in the last common ancestor of a pair of species **an orthogroup is the set of genes descended from a single gene in a group of species.** 
+
+Each gene tree from OrthoFinder, for example the one above, is for one orthogroup. The orthogroup gene tree is the tree we need to look at if we want it to include all pairwise orthologues. And even though some of the genes within an orthogroup can be paralogs of one another, if we tried to take any genes out then we would also be removing orthologs too.
+
+So if we want to do a comparison of the ‘equivalent’ genes in a set of species, we need to do the comparison across the genes in an othogroup. The orthogroups are in the file Orthogroups/Orthogroups.tsv. This table has one orthogroup per line and one spcies per column and is ordered from largest orthogroup to smallest.
+
+#### Orthogroup Sequences
+
+> /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/Sid.v.Past_longestContig_500ln/OrthoFinder/Results_Apr02/Orthogroup_Sequences/
+
+For each orthogroup there is a FASTA file in Orthogroup_Sequences/ which contains the sequences for the genes in that orthogroup.
+
 
 
 ----------------------------------------------------------------------------------------------
@@ -443,6 +562,29 @@ sbatch orthofinder_sym.sh
 **Results:**
 > /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Symbiont/OrthoFinder/
 
+
+> /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Symbiont/
+
+cat orthofinder_sym.txt
+```
+Writing orthogroups to file
+---------------------------
+OrthoFinder assigned 53080 genes (39.0% of total) to 21527 orthogroups. Fifty percent of all genes were in orthogroups with 1 or more genes (G50 was 1) and were contained in the largest 36505 orthogroups (O50 was 36505). There were 960 orthogroups with all species present and 458 of these consisted entirely of single-copy genes.
+```
+Running blast_nucl all-versus-all
+
+#### Orthogroups
+
+> /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Symbiont/OrthoFinder/Results_Mar25/Orthogroups/
+
+#### Orthologues directory
+
+> /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Symbiont/OrthoFinder/Results_Mar25/Orthologues/
+
+#### Orthogroup sequences
+
+For each orthogroup there is a FASTA file in Orthogroup_Sequences/ which contains the sequences for the genes in that orthogroup.
+> /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Symbiont/OrthoFinder/Results_Mar25/Orthogroup_Sequences/
 
 ----------------------------------------------------------------------------------------------
 
