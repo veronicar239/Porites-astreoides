@@ -1,0 +1,100 @@
+	10714_past_LongestContig_500ln_suffixed	19222_Sid_GoodCoral_500lnThresh_Final
+Number of genes	10714	19222
+Number of genes in orthogroups	2634	6866
+Number of unassigned genes	8080	12356
+Percentage of genes in orthogroups	24.6	35.7
+Percentage of unassigned genes	75.4	64.3
+Number of orthogroups containing species	1673	2599
+Percentage of orthogroups containing species	55.7	86.5
+Number of species-specific orthogroups	406	1332
+Number of genes in species-specific orthogroups	1112	4101
+Percentage of genes in species-specific orthogroups	10.4	21.3
+
+
+Number of genes per-species in orthogroup	Number of orthogroups	Number of orthogroups
+'0	1332	406
+'1	1137	1017
+'2	391	977
+'3	63	262
+'4	34	128
+'5	15	62
+'6	12	49
+'7	4	22
+'8	1	15
+'9	5	9
+'10	4	7
+11-15	4	22
+16-20	1	6
+21-50	2	17
+51-100	0	2
+101-150	0	3
+151-200	0	1
+201-500	0	0
+501-1000	0	0
+'1001+	0	0
+
+Number of genes per-species in orthogroup	Percentage of orthogroups	Percentage of orthogroups
+'0	44.3	13.5
+'1	37.8	33.8
+'2	13.0	32.5
+'3	2.1	8.7
+'4	1.1	4.3
+'5	0.5	2.1
+'6	0.4	1.6
+'7	0.1	0.7
+'8	0.0	0.5
+'9	0.2	0.3
+'10	0.1	0.2
+11-15	0.1	0.7
+16-20	0.0	0.2
+21-50	0.1	0.6
+51-100	0.0	0.1
+101-150	0.0	0.1
+151-200	0.0	0.0
+201-500	0.0	0.0
+501-1000	0.0	0.0
+'1001+	0.0	0.0
+
+Number of genes per-species in orthogroup	Number of genes	Number of genes
+'0	0	0
+'1	1137	1017
+'2	782	1954
+'3	189	786
+'4	136	512
+'5	75	310
+'6	72	294
+'7	28	154
+'8	8	120
+'9	45	81
+'10	40	70
+11-15	50	284
+16-20	18	104
+21-50	54	504
+51-100	0	143
+101-150	0	360
+151-200	0	173
+201-500	0	0
+501-1000	0	0
+'1001+	0	0
+
+Number of genes per-species in orthogroup	Percentage of genes	Percentage of genes
+'0	0.0	0.0
+'1	10.6	5.3
+'2	7.3	10.2
+'3	1.8	4.1
+'4	1.3	2.7
+'5	0.7	1.6
+'6	0.7	1.5
+'7	0.3	0.8
+'8	0.1	0.6
+'9	0.4	0.4
+'10	0.4	0.4
+11-15	0.5	1.5
+16-20	0.2	0.5
+21-50	0.5	2.6
+51-100	0.0	0.7
+101-150	0.0	1.9
+151-200	0.0	0.9
+201-500	0.0	0.0
+501-1000	0.0	0.0
+'1001+	0.0	0.0
