@@ -420,12 +420,50 @@ OrthoFinder assigned 13060 genes (26.8% of total) to 4319 orthogroups. Fifty per
 **Results:**
 > /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/Sid.v.Past_longestContig/OrthoFinder/
 
+[Results: What OrthoFinder provides](https://github.com/davidemms/OrthoFinder#what-orthofinder-provides)
+
 > /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/Sid.v.Past_longestContig/OrthoFinder/Results_Apr02/Comparative_Genomics_Statistics/
-There's a tab-delimited file called Comparative_Genomics_Statistics/Statistics_PerSpecies.tsv. Like other “.tsv” files from OrthoFinder this is best viewed in a spreadsheet program like Excel.
+
+There's a tab-delimited file called Comparative_Genomics_Statistics/Statistics_PerSpecies.tsv. 
+
+#### Comparative Genomics Statistics directory
+
+    - Duplications_per_Orthogroup.tsv is a tab separated text file that gives the number of duplications identified in each orthogroup. This master file for this data is Gene_Duplication_Events/Duplications.tsv.
+
+    - Duplications_per_Species_Tree_Node.tsv is a tab separated text file that gives the number of duplications identified as occurring along each branch of the species tree. This master file for this data is Gene_Duplication_Events/Duplications.tsv.
+
+    - Orthogroups_SpeciesOverlaps.tsv is a tab separated text file that contains the number of orthogroups shared between each species-pair as a square matrix.
+
+    - OrthologuesStats_*.tsv files are tab separated text files containing matrices giving the numbers of orthologues in one-to-one, one-to-many and many-to-many relationships between each pair of species.
+
+        - OrthologuesStats_one-to-one.tsv is the number of one-to-one orthologues between each species pair.
+
+        - OrthologuesStats_many-to-many.tsv contains the number of orthologues in a many-to-many relationship for each species pair (due to gene duplication events in both lineages post-speciation). Entry (i,j) is the number of genes in species i that are in a many-to-many orthology relationship with genes in species j.
+
+        - OrthologuesStats_many-to-one.tsv: entry (i,j) gives the number of genes in species i that are in a one-to-many orthology relationship with genes from species j. There is a walk-through of an example results file here: https://github.com/davidemms/OrthoFinder/issues/259.
+
+        - OrthologuesStats_one-to-many.tsv: entry (i,j) gives the number of genes in species i that are in a many-to-one orthology relationship with a gene from species j. There is a walk-through of an example results file here: https://github.com/davidemms/OrthoFinder/issues/259.
+
+        - OrthologuesStats_Total.tsv contains the totals for each species pair of orthologues of whatever multiplicity. Entry (i,j) is the total number of genes in species i that have orthologues in species j.
+
+    - Statistics_Overall.tsv is a tab separated text file that contains general statistics about orthogroup sizes and proportion of genes assigned to orthogroups.
+
+    - Statistics_PerSpecies.tsv is a tab separated text file that contains the same information as the Statistics_Overall.csv file but for each individual species.
+
+Most of the terms in the files 'Statistics_Overall.csv' and 'Statistics_PerSpecies.csv' are self-explanatory, the remainder are defined below.
+
+    Species-specific orthogroup: An orthogroups that consist entirely of genes from one species.
+    G50: The number of genes in the orthogroup such that 50% of genes are in orthogroups of that size or larger.
+    O50: The smallest number of orthogroups such that 50% of genes are in orthogroups of that size or larger.
+    Single-copy orthogroup: An orthogroup with exactly one gene (and no more) from each species. These orthogroups are ideal for inferring a species tree and many other analyses.
+    Unassigned gene: A gene that has not been put into an orthogroup with any other genes.
+
 
 #### Orthologues directory
 
 One of the most common reasons for running OrthoFinder is to find the orthologue of a gene you’re interested in.
+
+Each row in a file contains the gene(s) in one species that are orthologues of the gene(s) in the other species and each row is cross-referenced to the orthogroup that contains those genes.
 
 > /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/Sid.v.Past_longestContig/OrthoFinder/Results_Apr02/Orthologues/Orthologues_29422_past_LongestContig_suffixed/
 
@@ -434,13 +472,28 @@ File:  29422_past_LongestContig_suffixed__v__19222_Sid_GoodCoral_500lnThresh_Fin
 
 #### Orthogroups
 
+*Orthogroups Directory is deprecated*
+
 > /cm/shared/courses/dbarshis/barshislab/VRad/taxons/orthofinder_Sid-Past/orthofind_Host/Sid.v.Past_longestContig/OrthoFinder/Results_Apr02/Orthogroups/
+
+### Phylogenetic Hierarchical Orthogroups
+
+From version 2.4.0 onwards OrthoFinder infers HOGs, orthogroups at each hierarchical level (i.e. at each node in the species tree) by analysing the rooted gene trees. This is a far more accurate orthogroup inference method than the gene similarity/graph based approach used by all other methods and used previously by OrthoFinder (the deprecated Orthogroups/Orthogroups.tsv file). 
+
+According to the Orthobench benchmarks, these new orthogroups are 12% more accurate than the OrthoFinder 2 orthogroups (Orthogroups/Orthogroups.tsv). The accuracy can be increased still further (20% more accurate on Orthobench) by including outgroup species, which help with the interpretation of the rooted gene trees.
+
 
 Often we’re interested in group-wise species comparisons, that is comparisons across a clade of species rather than between a pair of species. The generalisation of orthology to multiple species is the orthogroup. Just like orthologues are the genes descended from a single gene in the last common ancestor of a pair of species **an orthogroup is the set of genes descended from a single gene in a group of species.** 
 
-Each gene tree from OrthoFinder, for example the one above, is for one orthogroup. The orthogroup gene tree is the tree we need to look at if we want it to include all pairwise orthologues. And even though some of the genes within an orthogroup can be paralogs of one another, if we tried to take any genes out then we would also be removing orthologs too.
+Each gene tree from OrthoFinder is for one orthogroup. The orthogroup gene tree is the tree we need to look at if we want it to include all pairwise orthologues. And even though some of the genes within an orthogroup can be paralogs of one another, if we tried to take any genes out then we would also be removing orthologs too. So if we want to do a comparison of the ‘equivalent’ genes in a set of species, we need to do the comparison across the genes in an othogroup. 
 
-So if we want to do a comparison of the ‘equivalent’ genes in a set of species, we need to do the comparison across the genes in an othogroup. The orthogroups are in the file Orthogroups/Orthogroups.tsv. This table has one orthogroup per line and one spcies per column and is ordered from largest orthogroup to smallest.
+**Output file:**
+N0.tsv is a tab separated text file. Each row contains the genes belonging to a single orthogroup. The genes from each orthogroup are organized into columns, one per species. Additional columns give the HOG (Hierarchical Orthogroup) ID and the node in the gene tree from which the HOG was determined (note, this can be above the root of the clade containing the genes). This file effectively replaces the orthogroups in Orthogroups/Orthogroups.tsv from Markov clustering using MCL.
+
+**HOG:**
+*Hierarchical orthogroup splitting:*
+ When analysing the gene trees, a nested hierarchical group (any HOG other than N0, the HOG at the level of the last common ancestor of all species) may sometimes have lost its genes from the earliest diverging species and then duplicated before the first extant genes. The two first diverging clades will then be paralogous even though the evidence suggests they belong to the same HOG. For most analyses it is often better to split these clades into separate groups. This can be requested using the option '-y'.
+
 
 #### Orthogroup Sequences
 

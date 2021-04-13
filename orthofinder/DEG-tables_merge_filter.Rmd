@@ -1,0 +1,343 @@
+---
+title: "DEG-tables_merge_filter"
+author: "Veronica Radice"
+date: "13/04/2021"
+output: html_document
+---
+
+# Aim:  cross-species DEG comparison
+## Comparison of shared response
+
+### Import libraries
+```{r}
+library(tidyverse)
+```
+
+
+### Set working directory
+```{r}
+setwd("~/Documents/Rprojects/postdoc\ Rprojects/ODU_postdoc_Rprojects/Paper_Ojo_gene-expression/Porites_astreoides/orthofinder/")
+```
+
+
+##############################################################################
+
+# 1. Merge DESeq2 output with OrthoFinder output
+
+Use Sid.v.Past_longestContig orthologue output.
+
+Import OrthoFinder orthogroups with species orthologues
+```{r}
+orthogroups <- read.table("~/Documents/Rprojects/postdoc\ Rprojects/ODU_postdoc_Rprojects/Paper_Ojo_gene-expression/Porites_astreoides/orthofinder/Sid.v.Past_longestContig/Phylogenetic_Hierarchical_Orthogroups/N0.tsv", header = TRUE, sep = "\t", stringsAsFactors=F) #row.names = 1
+
+dim(orthogroups)
+```
+
+```{r}
+head(orthogroups)
+```
+
+
+cut down to comparison gene name columns only
+```{r}
+orthogroups <- orthogroups[, c(1,4:5)]
+rownames(orthogroups) <- orthogroups$HOG
+head(orthogroups)
+```
+
+
+```{r}
+# Split the comma-separated paralogs
+ortho.split <- strsplit(as.matrix(orthogroups),", ")
+# it's now a list of character vectors
+
+# Add dimensions:
+dim(ortho.split) <- dim(orthogroups)
+
+# Add row and column names:
+dimnames(ortho.split) <- dimnames(orthogroups)
+```
+
+### To look at sequences for a specific orthogroup:
+
+Example 1:1 orthogroup
+```{r}
+ortho.split["N0.HOG0000000", ]
+```
+
+Example multi-gene orthogroup
+```{r}
+ortho.split["N0.HOG0000021", ]
+```
+
+list of orthogroups 
+```{r}
+names_orthogroups <- row.names(apply(ortho.split,2,sapply,length))
+```
+
+### Check the sizes of the orthogroups
+
+make a matrix containing the number of genes for each species in each orthogroup
+```{r}
+orthoSize <- apply(ortho.split,2,sapply,length)
+orthoSize <- orthoSize[, 2:3]
+```
+
+
+check the number of in-paralogs in each species in orthogroup OG0000018:
+```{r}
+orthoSize["N0.HOG0000021", ]
+```
+
+plot how many orthogroups are represented in each transcriptome:
+```{r}
+plot(table(apply(orthoSize>0,1,sum)),ylab="no. orthogroups",xlab="no. transcriptomes")
+```
+
+**1:1 orthogroups**
+how many orthogroups have exactly one ortholog in each species
+```{r}
+sum(apply(orthoSize==1,1,all)) # number of 1:1 groups
+```
+
+*If you are comparing more than 2 species*
+calulate the number of orthogroups with exactly one ortholog in exactly two of the species
+```{r}
+#sum(apply(grpSize==1,1,sum)==2 & apply(grpSize > 1,1,sum)==0)
+```
+
+
+## A)  1:1 orthogroups
+
+```{r}
+names_1.to.1 <- as.data.frame(apply(orthoSize==1,1,all))
+
+names_1.to.1 <- names_1.to.1 %>% 
+  filter(names_1.to.1$`apply(orthoSize == 1, 1, all)` == TRUE)
+
+names_1.to.1$orthogroups <- rownames(names_1.to.1)
+dim(names_1.to.1)
+```
+
+
+```{r}
+ortho_1.to.1  <- orthogroups[names_1.to.1, ]
+dim(ortho_1.to.1)
+```
+
+
+```{r}
+head(ortho_1.to.1)
+```
+
+
+
+## B)  multi-gene orthogroups
+
+```{r}
+ortho.df <- as.data.frame(ortho.split)
+```
+
+
+use "character(0)" to filter out orthogroups that only belong to one species
+```{r}
+ortho.df <- subset(ortho.df, ortho.df$X19222_Sid_GoodCoral_500lnThresh_Final != "character(0)")
+
+ortho.df <- subset(ortho.df, ortho.df$X29422_past_LongestContig_suffixed != "character(0)")
+
+dim(ortho.df)
+```
+
+rownames(names_1.to.1)
+   [1] "N0.HOG0000000" "N0.HOG0000014" "N0.HOG0000023" "N0.HOG0000026" "N0.HOG0000044"
+
+rownames(ortho.df)
+   [1] "N0.HOG0000000" "N0.HOG0000008" "N0.HOG0000009" "N0.HOG0000012" "N0.HOG0000013"
+   [6] "N0.HOG0000014" "N0.HOG0000019" "N0.HOG0000020" "N0.HOG0000021" "N0.HOG0000022"
+  [11] "N0.HOG0000023" "N0.HOG0000024" "N0.HOG0000026" "N0.HOG0000028" "N0.HOG0000029"
+
+check for any 1:1 orthogroups 
+```{r}
+all(rownames(names_1.to.1) %in% rownames(ortho.df))
+all(rownames(names_1.to.1) %in% ortho.df$HOG)
+# any()
+```
+
+so all of the 1:1 orthogroups are in ortho.df
+```{r}
+length(match(rownames(names_1.to.1), rownames(ortho.df)))
+```
+
+*match() requires vectors (not dataframes)*
+check class of object
+class(names_1.to.1)
+
+```{r}
+names_1.to.1 <- names_1.to.1[,2]
+class(names_1.to.1)
+#typeof(names_1.to.1)
+```
+
+```{r}
+length(names_1.to.1 %in% rownames(ortho.df))
+```
+
+```{r}
+length(names_1.to.1 %in% ortho.df$HOG)
+```
+
+A %in% B
+intersect(A,B)
+setdiff(A,B)
+
+```{r}
+head(rownames(ortho.df) %in% names_1.to.1)
+```
+
+
+```{r}
+names_multi.ortho <- setdiff(rownames(ortho.df), names_1.to.1)
+str(names_multi.ortho)
+```
+
+
+```{r}
+multi.ortho  <- orthogroups[names_multi.ortho, ]
+head(multi.ortho)
+```
+
+```{r}
+multi.ortho.Sid <- multi.ortho[ , 1:2]
+
+s <- strsplit(as.character(multi.ortho.Sid$X19222_Sid_GoodCoral_500lnThresh_Final),", ")
+head(s, 2)
+```
+
+## Siderastrea multi-orthogroup list
+```{r}
+multi.ortho.Sid <- multi.ortho[ , 1:2]
+multi.ortho.Sid <- separate_rows(multi.ortho.Sid, X19222_Sid_GoodCoral_500lnThresh_Final, sep = ",")
+multi.ortho.Sid$X19222_Sid_GoodCoral_500lnThresh_Final <- as.factor(multi.ortho.Sid$X19222_Sid_GoodCoral_500lnThresh_Final)
+dim(multi.ortho.Sid)
+```
+
+```{r}
+head(multi.ortho.Sid)
+```
+
+
+## Porites astreoides multi-orthogroup list
+```{r}
+multi.ortho.Past <- multi.ortho[ , c(1,3)]
+multi.ortho.Past <- separate_rows(multi.ortho.Past, X29422_past_LongestContig_suffixed, sep = ",")
+multi.ortho.Past$X29422_past_LongestContig_suffixed <- as.factor(multi.ortho.Past$X29422_past_LongestContig_suffixed)
+dim(multi.ortho.Past)
+```
+
+```{r}
+head(multi.ortho.Past)
+```
+
+
+
+##############################################################################
+
+# 2. Merge DEG results table for each contrast
+
+
+### Ojo-Ojo vs. Ojo-Control
+OO_OC
+
+P. astreoides vs. Siderastrea
+
+```{r}
+OO_OC_Past <- read.csv("~/Documents/Rprojects/postdoc\ Rprojects/ODU_postdoc_Rprojects/Paper_Ojo_gene-expression/Porites_astreoides/host/Past_Host_DE_genes_OO_OC_padj.1.csv", header = TRUE) 
+
+OO_OC_Past$gene <- as.factor(OO_OC_Past$gene)
+
+OO_OC_Sid <- read.csv("~/Documents/Rprojects/postdoc\ Rprojects/ODU_postdoc_Rprojects/Paper_Ojo_gene-expression/Siderastrea/host/Sid_Host_DE_genes_OO_OC_padj.1.csv", header = TRUE) 
+
+OO_OC_Sid$gene <- as.factor(OO_OC_Sid$gene)
+```
+
+
+**Sid**
+```{r}
+length(intersect(OO_OC_Sid$gene, multi.ortho.Sid$X19222_Sid_GoodCoral_500lnThresh_Final))
+```
+
+
+check if any of the values contained in vector A are also in vector B:
+```{r}
+any(OO_OC_Sid$gene %in% multi.ortho.Sid$X19222_Sid_GoodCoral_500lnThresh_Final)
+```
+
+**Past**
+
+CONTINUE HERE
+!!! isotig versus isogroup in Past !!!
+
+```{r}
+length(intersect(OO_OC_Past$gene, multi.ortho.Past$X29422_past_LongestContig_suffixed))
+```
+
+
+check if any of the values contained in vector A are also in vector B:
+```{r}
+any(OO_OC_Past$gene %in% multi.ortho.Past$X29422_past_LongestContig_suffixed)
+```
+
+
+## filter by DEG direction 
+
+### up-regulated
+
+```{r}
+OO_OC_up <- OO_OC %>%
+    filter(baseMean > 0 & padj < 0.1)
+```
+
+
+### down-regulated
+
+```{r}
+OO_OC_down <- OO_OC %>%
+    filter(baseMean < 0 & padj < 0.1)
+```
+
+
+##############################################################################
+
+### Ojo-Ojo vs. Lagoon-Ojo
+OO_LO
+
+P. astreoides vs. Siderastrea
+
+##############################################################################
+
+### Lagoon-Ojo vs. Lagoon-Control
+LO_LC
+
+P. astreoides vs. Siderastrea
+
+##############################################################################
+
+### Ojo-Control vs. Lagoon-Control
+OC_LC
+
+P. astreoides vs. Siderastrea
+
+##############################################################################
+
+### Reef-Ojo vs. Reef-Control
+RO_RC
+
+P. porites vs. Siderastrea
+
+
+##############################################################################
+
+### Session Info
+```{r}
+sessionInfo()
+```
