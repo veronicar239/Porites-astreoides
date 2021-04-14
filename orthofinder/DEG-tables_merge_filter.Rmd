@@ -6,7 +6,7 @@ output: html_document
 ---
 
 # Aim:  cross-species DEG comparison
-## Comparison of shared response
+## Comparison of potential shared response
 
 ### Import libraries
 ```{r}
@@ -19,6 +19,37 @@ library(tidyverse)
 setwd("~/Documents/Rprojects/postdoc\ Rprojects/ODU_postdoc_Rprojects/Paper_Ojo_gene-expression/Porites_astreoides/orthofinder/")
 ```
 
+#### import Past seq2iso table
+Carly Kenkel's P. astreoides transcriptome reference
+```{r}
+past_seq2iso <- read.table("~/Documents/Postdoc/ODU_postdoc/projects/Ojo_gene-expression/database/pastreoides_2014/pastreoides_may2014/past_seq2iso_suffixed.tab", header = FALSE, sep = "\t", stringsAsFactors=T)
+
+past_seq2iso <- past_seq2iso %>% 
+  dplyr::rename(isotig = V1,
+         gene = V2)
+
+head(past_seq2iso)
+```
+
+#### import Ppor seq2iso 
+Same as Past table, but with _Ppor suffix
+```{r}
+ppor_seq2iso <- read.table("~/Documents/Postdoc/ODU_postdoc/projects/Ojo_gene-expression/database/pastreoides_2014/pastreoides_may2014/past_seq2iso_suffixed_Ppor.tab", header = FALSE, sep = "\t", stringsAsFactors=T)
+
+ppor_seq2iso <- ppor_seq2iso %>% 
+  dplyr::rename(isotig_Ppor = V1,
+         gene_Ppor = V2)
+
+head(ppor_seq2iso)
+```
+
+Same transcriptome reference, just used different suffixes for mapping of the different species
+```{r}
+seq2iso <- cbind(past_seq2iso, ppor_seq2iso)
+head(seq2iso)
+```
+
+
 
 ##############################################################################
 
@@ -26,9 +57,21 @@ setwd("~/Documents/Rprojects/postdoc\ Rprojects/ODU_postdoc_Rprojects/Paper_Ojo_
 
 Use Sid.v.Past_longestContig orthologue output.
 
-Import OrthoFinder orthogroups with species orthologues
+## Import OrthoFinder orthogroups with species orthologues
+
+Output file from OrthoFinder2:
+    N0.tsv is a tab separated text file. Each row contains the genes belonging to a single orthogroup. The genes from each orthogroup are organized into columns, one per species. Additional columns give the HOG (Hierarchical Orthogroup) ID and the node in the gene tree from which the HOG was determined (note, this can be above the root of the clade containing the genes). This file effectively replaces the orthogroups in Orthogroups/Orthogroups.tsv from Markov clustering using MCL.
+    
+*Hierarchical orthogroup splitting:*
+   When analysing the gene trees, a nested hierarchical group (any HOG other than N0, the HOG at the level of the last common ancestor of all species) may sometimes have lost its genes from the earliest diverging species and then duplicated before the first extant genes. The two first diverging clades will then be paralogous even though the evidence suggests they belong to the same HOG. For most analyses it is often better to split these clades into separate groups.
+ 
 ```{r}
 orthogroups <- read.table("~/Documents/Rprojects/postdoc\ Rprojects/ODU_postdoc_Rprojects/Paper_Ojo_gene-expression/Porites_astreoides/orthofinder/Sid.v.Past_longestContig/Phylogenetic_Hierarchical_Orthogroups/N0.tsv", header = TRUE, sep = "\t", stringsAsFactors=F) #row.names = 1
+
+orthogroups <- orthogroups %>% 
+  dplyr::rename(orthogroup = HOG,
+         gene_Sid = X19222_Sid_GoodCoral_500lnThresh_Final,
+         isotig = X29422_past_LongestContig_suffixed)
 
 dim(orthogroups)
 ```
@@ -38,13 +81,12 @@ head(orthogroups)
 ```
 
 
-cut down to comparison gene name columns only
+select comparison gene name columns
 ```{r}
 orthogroups <- orthogroups[, c(1,4:5)]
-rownames(orthogroups) <- orthogroups$HOG
+rownames(orthogroups) <- orthogroups$orthogroup
 head(orthogroups)
 ```
-
 
 ```{r}
 # Split the comma-separated paralogs
@@ -116,12 +158,15 @@ names_1.to.1 <- names_1.to.1 %>%
   filter(names_1.to.1$`apply(orthoSize == 1, 1, all)` == TRUE)
 
 names_1.to.1$orthogroups <- rownames(names_1.to.1)
-dim(names_1.to.1)
+names_1.to.1 <- names_1.to.1[ ,2]
 ```
 
 
 ```{r}
 ortho_1.to.1  <- orthogroups[names_1.to.1, ]
+
+ortho_1.to.1[sapply(ortho_1.to.1, is.character)] <- lapply(ortho_1.to.1[sapply(ortho_1.to.1, is.character)], as.factor)
+
 dim(ortho_1.to.1)
 ```
 
@@ -130,9 +175,43 @@ dim(ortho_1.to.1)
 head(ortho_1.to.1)
 ```
 
+1:1 Past
+```{r}
+ortho.1.to.1_Past.isotigs <- past_seq2iso %>% 
+  inner_join(ortho_1.to.1, by = "isotig")
+
+head(ortho.1.to.1_Past.isotigs)
+```
 
 
-## B)  multi-gene orthogroups
+1:1 Ppor
+```{r}
+names_1.to.1_ppor <- as.data.frame(apply(orthoSize==1,1,all))
+
+names_1.to.1_ppor <- names_1.to.1_ppor %>%
+  filter(names_1.to.1_ppor$`apply(orthoSize == 1, 1, all)` == TRUE)
+
+names_1.to.1_ppor$orthogroups <- rownames(names_1.to.1_ppor)
+names_1.to.1_ppor <- names_1.to.1_ppor[ ,2]
+
+ortho_1.to.1_ppor  <- orthogroups[names_1.to.1_ppor, ]
+
+ortho_1.to.1_ppor[sapply(ortho_1.to.1_ppor, is.character)] <- lapply(ortho_1.to.1_ppor[sapply(ortho_1.to.1_ppor, is.character)], as.factor)
+
+ortho.1.to.1_Ppor.isotigs <- seq2iso %>% 
+  inner_join(ortho_1.to.1_ppor, by = "isotig")
+
+ortho.1.to.1_Ppor.isotigs <- ortho.1.to.1_Ppor.isotigs[ , 3:6]
+
+ortho.1.to.1_Ppor.isotigs <- ortho.1.to.1_Ppor.isotigs %>% 
+  dplyr::rename(isotig = isotig_Ppor,
+                gene = gene_Ppor)
+
+head(ortho.1.to.1_Ppor.isotigs)
+```
+
+
+## B)  Multi-orthogroup dataframe
 
 ```{r}
 ortho.df <- as.data.frame(ortho.split)
@@ -141,11 +220,18 @@ ortho.df <- as.data.frame(ortho.split)
 
 use "character(0)" to filter out orthogroups that only belong to one species
 ```{r}
-ortho.df <- subset(ortho.df, ortho.df$X19222_Sid_GoodCoral_500lnThresh_Final != "character(0)")
+ortho.df <- subset(ortho.df, ortho.df$gene_Sid != "character(0)")
 
-ortho.df <- subset(ortho.df, ortho.df$X29422_past_LongestContig_suffixed != "character(0)")
+ortho.df <- subset(ortho.df, ortho.df$isotig != "character(0)")
 
 dim(ortho.df)
+```
+
+check for any 1:1 orthogroups 
+```{r}
+all(rownames(names_1.to.1) %in% rownames(ortho.df))
+all(rownames(names_1.to.1) %in% ortho.df$orthogroup)
+# any()
 ```
 
 rownames(names_1.to.1)
@@ -156,16 +242,12 @@ rownames(ortho.df)
    [6] "N0.HOG0000014" "N0.HOG0000019" "N0.HOG0000020" "N0.HOG0000021" "N0.HOG0000022"
   [11] "N0.HOG0000023" "N0.HOG0000024" "N0.HOG0000026" "N0.HOG0000028" "N0.HOG0000029"
 
-check for any 1:1 orthogroups 
-```{r}
-all(rownames(names_1.to.1) %in% rownames(ortho.df))
-all(rownames(names_1.to.1) %in% ortho.df$HOG)
-# any()
-```
 
 so all of the 1:1 orthogroups are in ortho.df
 ```{r}
-length(match(rownames(names_1.to.1), rownames(ortho.df)))
+length(match(names_1.to.1, rownames(ortho.df)))
+#length(names_1.to.1 %in% rownames(ortho.df))
+#length(names_1.to.1 %in% ortho.df$orthogroup)
 ```
 
 *match() requires vectors (not dataframes)*
@@ -173,17 +255,8 @@ check class of object
 class(names_1.to.1)
 
 ```{r}
-names_1.to.1 <- names_1.to.1[,2]
 class(names_1.to.1)
 #typeof(names_1.to.1)
-```
-
-```{r}
-length(names_1.to.1 %in% rownames(ortho.df))
-```
-
-```{r}
-length(names_1.to.1 %in% ortho.df$HOG)
 ```
 
 A %in% B
@@ -194,13 +267,12 @@ setdiff(A,B)
 head(rownames(ortho.df) %in% names_1.to.1)
 ```
 
-
 ```{r}
 names_multi.ortho <- setdiff(rownames(ortho.df), names_1.to.1)
 str(names_multi.ortho)
 ```
 
-
+### multi-orthogroups dataframe
 ```{r}
 multi.ortho  <- orthogroups[names_multi.ortho, ]
 head(multi.ortho)
@@ -209,15 +281,21 @@ head(multi.ortho)
 ```{r}
 multi.ortho.Sid <- multi.ortho[ , 1:2]
 
-s <- strsplit(as.character(multi.ortho.Sid$X19222_Sid_GoodCoral_500lnThresh_Final),", ")
+s <- strsplit(as.character(multi.ortho.Sid$gene_Sid),", ")
 head(s, 2)
 ```
 
-## Siderastrea multi-orthogroup list
+## Siderastrea multi-orthogroup dataframe
 ```{r}
 multi.ortho.Sid <- multi.ortho[ , 1:2]
-multi.ortho.Sid <- separate_rows(multi.ortho.Sid, X19222_Sid_GoodCoral_500lnThresh_Final, sep = ",")
-multi.ortho.Sid$X19222_Sid_GoodCoral_500lnThresh_Final <- as.factor(multi.ortho.Sid$X19222_Sid_GoodCoral_500lnThresh_Final)
+multi.ortho.Sid <- separate_rows(multi.ortho.Sid, gene_Sid, sep = ", ")
+
+multi.ortho.Sid[sapply(multi.ortho.Sid, is.character)] <- lapply(multi.ortho.Sid[sapply(multi.ortho.Sid, is.character)], 
+                                       as.factor)
+
+multi.ortho.Sid <- multi.ortho.Sid %>% 
+  dplyr::rename(gene = gene_Sid)
+
 dim(multi.ortho.Sid)
 ```
 
@@ -226,11 +304,14 @@ head(multi.ortho.Sid)
 ```
 
 
-## Porites astreoides multi-orthogroup list
+## Porites astreoides multi-orthogroup dataframe
 ```{r}
 multi.ortho.Past <- multi.ortho[ , c(1,3)]
-multi.ortho.Past <- separate_rows(multi.ortho.Past, X29422_past_LongestContig_suffixed, sep = ",")
-multi.ortho.Past$X29422_past_LongestContig_suffixed <- as.factor(multi.ortho.Past$X29422_past_LongestContig_suffixed)
+multi.ortho.Past <- separate_rows(multi.ortho.Past, isotig, sep = ", ")
+
+multi.ortho.Past[sapply(multi.ortho.Past, is.character)] <- lapply(multi.ortho.Past[sapply(multi.ortho.Past, is.character)], 
+                                       as.factor)
+
 dim(multi.ortho.Past)
 ```
 
@@ -238,6 +319,31 @@ dim(multi.ortho.Past)
 head(multi.ortho.Past)
 ```
 
+!!! isotig versus isogroup in Past !!!
+
+*Use inner_join() if you only want to retain observations when they match across both data frames.*
+
+```{r}
+multi.ortho.Past.isotigs <- past_seq2iso %>% 
+  inner_join(multi.ortho.Past, by = "isotig")
+
+head(multi.ortho.Past.isotigs)
+```
+
+
+### Porites porites multi-orthogroup dataframe
+```{r}
+multi.ortho.Ppor.isotigs <- seq2iso %>% 
+  inner_join(multi.ortho.Past.isotigs, by = "isotig")
+
+multi.ortho.Ppor.isotigs <- multi.ortho.Ppor.isotigs[ , c(3:4,6)]
+
+multi.ortho.Ppor.isotigs <- multi.ortho.Ppor.isotigs %>% 
+  dplyr::rename(isotig = isotig_Ppor,
+                gene = gene_Ppor)
+
+head(multi.ortho.Ppor.isotigs)
+```
 
 
 ##############################################################################
@@ -254,56 +360,95 @@ P. astreoides vs. Siderastrea
 OO_OC_Past <- read.csv("~/Documents/Rprojects/postdoc\ Rprojects/ODU_postdoc_Rprojects/Paper_Ojo_gene-expression/Porites_astreoides/host/Past_Host_DE_genes_OO_OC_padj.1.csv", header = TRUE) 
 
 OO_OC_Past$gene <- as.factor(OO_OC_Past$gene)
+head(OO_OC_Past)
+```
 
+```{r}
 OO_OC_Sid <- read.csv("~/Documents/Rprojects/postdoc\ Rprojects/ODU_postdoc_Rprojects/Paper_Ojo_gene-expression/Siderastrea/host/Sid_Host_DE_genes_OO_OC_padj.1.csv", header = TRUE) 
 
 OO_OC_Sid$gene <- as.factor(OO_OC_Sid$gene)
+head(OO_OC_Sid)
 ```
 
 
 **Sid**
-```{r}
-length(intersect(OO_OC_Sid$gene, multi.ortho.Sid$X19222_Sid_GoodCoral_500lnThresh_Final))
-```
-
+*Only one DEG in this comparison*
 
 check if any of the values contained in vector A are also in vector B:
 ```{r}
-any(OO_OC_Sid$gene %in% multi.ortho.Sid$X19222_Sid_GoodCoral_500lnThresh_Final)
+any(OO_OC_Sid$gene %in% multi.ortho.Sid$gene)
 ```
+
+Multi-orthogroup
+```{r}
+length(intersect(OO_OC_Sid$gene, multi.ortho.Sid$gene))
+```
+
+1:1 orthogroup
+```{r}
+length(intersect(OO_OC_Sid$gene, ortho_1.to.1$gene))
+```
+
+*Indeed, this gene is in the unassigned gene list, Orthogroups_UnassignedGenes.tsv*
+
 
 **Past**
 
-CONTINUE HERE
-!!! isotig versus isogroup in Past !!!
-
+Multi-orthogroup
 ```{r}
-length(intersect(OO_OC_Past$gene, multi.ortho.Past$X29422_past_LongestContig_suffixed))
+length(intersect(OO_OC_Past$gene, multi.ortho.Past.isotigs$gene))
+```
+
+1:1 orthogroup
+```{r}
+length(intersect(OO_OC_Past$gene, ortho.1.to.1_Past.isotigs$gene))
 ```
 
 
-check if any of the values contained in vector A are also in vector B:
 ```{r}
-any(OO_OC_Past$gene %in% multi.ortho.Past$X29422_past_LongestContig_suffixed)
+past_multi.isogroups_OO_OC <- multi.ortho.Past.isotigs %>% 
+  inner_join(OO_OC_Past, by = "gene")
+
+dim(past_multi.isogroups_OO_OC)
+```
+
+```{r}
+head(past_multi.isogroups_OO_OC)
+```
+
+**orthogroups that are counted more than once in the DEG results table**
+```{r}
+past_multi.isogroups_OO_OC %>% count(orthogroup) %>% filter(n > 1)
+```
+
+Breakdown of which orthogroups are duplicated 
+```{r}
+past_multi.isogroups_OO_OC %>% 
+  group_by(orthogroup) %>% 
+  filter(n()>1)
 ```
 
 
-## filter by DEG direction 
 
-### up-regulated
-
+1:1 orthogroups
 ```{r}
-OO_OC_up <- OO_OC %>%
-    filter(baseMean > 0 & padj < 0.1)
+past_1.to.1.isogroups_OO_OC <- ortho.1.to.1_Past.isotigs %>% 
+  inner_join(OO_OC_Past, by = "gene")
+
+dim(past_1.to.1.isogroups_OO_OC)
 ```
 
-
-### down-regulated
-
 ```{r}
-OO_OC_down <- OO_OC %>%
-    filter(baseMean < 0 & padj < 0.1)
+head(past_1.to.1.isogroups_OO_OC)
 ```
+
+**orthogroups that are counted more than once in the DEG results table**
+```{r}
+past_1.to.1.isogroups_OO_OC %>% count(orthogroup) %>% filter(n > 1)
+```
+
+Result:
+No shared response.
 
 
 ##############################################################################
@@ -313,12 +458,125 @@ OO_LO
 
 P. astreoides vs. Siderastrea
 
+```{r}
+OO_LO_Past <- read.csv("~/Documents/Rprojects/postdoc\ Rprojects/ODU_postdoc_Rprojects/Paper_Ojo_gene-expression/Porites_astreoides/host/Past_Host_DE_genes_OO_LO_padj.1.csv", header = TRUE) 
+
+OO_LO_Past$gene <- as.factor(OO_LO_Past$gene)
+head(OO_LO_Past)
+```
+
+```{r}
+OO_LO_Sid <- read.csv("~/Documents/Rprojects/postdoc\ Rprojects/ODU_postdoc_Rprojects/Paper_Ojo_gene-expression/Siderastrea/host/Sid_Host_DE_genes_OO_LO_padj.1.csv", header = TRUE) 
+
+OO_LO_Sid$gene <- as.factor(OO_LO_Sid$gene)
+head(OO_LO_Sid)
+```
+
+
+**Sid**
+*Only two DEG in this comparison*
+
+check if any of the values contained in vector A are also in vector B:
+```{r}
+any(OO_LO_Sid$gene %in% multi.ortho.Sid$gene)
+```
+
+Multi-orthogroup
+```{r}
+length(intersect(OO_LO_Sid$gene, multi.ortho.Sid$gene))
+```
+
+1:1 orthogroup
+```{r}
+length(intersect(OO_LO_Sid$gene, ortho_1.to.1$gene))
+```
+
+*Indeed, both these genes are in the unassigned gene list, Orthogroups_UnassignedGenes.tsv*
+
+
+**Past**
+
+Multi-orthogroup
+```{r}
+length(intersect(OO_LO_Past$gene, multi.ortho.Past.isotigs$gene))
+```
+
+1:1 orthogroup
+```{r}
+length(intersect(OO_LO_Past$gene, ortho.1.to.1_Past.isotigs$gene))
+```
+
+```{r}
+past_multi.isogroups_OO_LO <- multi.ortho.Past.isotigs %>% 
+  inner_join(OO_LO_Past, by = "gene")
+
+dim(past_multi.isogroups_OO_LO)
+```
+
+```{r}
+head(past_multi.isogroups_OO_LO)
+```
+
+**orthogroups that are counted more than once in the DEG results table**
+```{r}
+past_multi.isogroups_OO_LO %>% count(orthogroup) %>% filter(n > 1)
+```
+
+Breakdown of which orthogroups are duplicated 
+```{r}
+past_multi.isogroups_OO_LO %>% 
+  group_by(orthogroup) %>% 
+  filter(n()>1)
+```
+
+
+1:1 Past
+```{r}
+past_1.to.1.isogroups_OO_LO <- ortho.1.to.1_Past.isotigs %>% 
+  inner_join(OO_LO_Past, by = "gene")
+
+dim(past_1.to.1.isogroups_OO_LO)
+```
+
+```{r}
+head(past_1.to.1.isogroups_OO_LO)
+```
+
+**orthogroups that are counted more than once in the DEG results table**
+```{r}
+past_1.to.1.isogroups_OO_LO %>% count(orthogroup) %>% filter(n > 1)
+```
+
+Result:
+No shared response.
+
+
 ##############################################################################
 
 ### Lagoon-Ojo vs. Lagoon-Control
 LO_LC
 
 P. astreoides vs. Siderastrea
+
+```{r}
+LO_LC_Past <- read.csv("~/Documents/Rprojects/postdoc\ Rprojects/ODU_postdoc_Rprojects/Paper_Ojo_gene-expression/Porites_astreoides/host/Past_Host_DE_genes_LO_LC_padj.1.csv", header = TRUE) 
+
+LO_LC_Past$gene <- as.factor(LO_LC_Past$gene)
+head(LO_LC_Past)
+```
+
+*This contrast has zero differentially expressed genes for Siderastrea*
+```{r}
+# LO_LC_Sid <- read.csv("~/Documents/Rprojects/postdoc\ Rprojects/ODU_postdoc_Rprojects/Paper_Ojo_gene-expression/Siderastrea/host/Sid_Host_DE_genes_LO_LC_padj.1.csv", header = TRUE) 
+# 
+# LO_LC_Sid$gene <- as.factor(LO_LC_Sid$gene)
+# head(LO_LC_Sid)
+```
+
+Result:
+Cannot compare because Siderastrea had zero DEG for this contrast.
+
+
 
 ##############################################################################
 
@@ -327,12 +585,230 @@ OC_LC
 
 P. astreoides vs. Siderastrea
 
+```{r}
+OC_LC_Past <- read.csv("~/Documents/Rprojects/postdoc\ Rprojects/ODU_postdoc_Rprojects/Paper_Ojo_gene-expression/Porites_astreoides/host/Past_Host_DE_genes_OC_LC_padj.1.csv", header = TRUE) 
+
+OC_LC_Past$gene <- as.factor(OC_LC_Past$gene)
+head(OC_LC_Past)
+```
+
+```{r}
+OC_LC_Sid <- read.csv("~/Documents/Rprojects/postdoc\ Rprojects/ODU_postdoc_Rprojects/Paper_Ojo_gene-expression/Siderastrea/host/Sid_Host_DE_genes_OC_LC_padj.1.csv", header = TRUE) 
+
+OC_LC_Sid$gene <- as.factor(OC_LC_Sid$gene)
+head(OC_LC_Sid)
+```
+
+
+**Sid**
+*Only one DEG in this comparison*
+
+check if any of the values contained in vector A are also in vector B:
+```{r}
+any(OC_LC_Sid$gene %in% multi.ortho.Sid$gene)
+```
+
+Multi-orthogroup list
+```{r}
+length(intersect(OC_LC_Sid$gene, multi.ortho.Sid$gene))
+```
+
+1:1 orthogroup
+```{r}
+length(intersect(OC_LC_Sid$gene, ortho_1.to.1$gene))
+```
+
+*Indeed, this gene is in the unassigned gene list, Orthogroups_UnassignedGenes.tsv*
+
+
+**Past**
+
+Multi-orthogroup list
+```{r}
+length(intersect(OC_LC_Past$gene, multi.ortho.Past.isotigs$gene))
+```
+
+1:1 orthogroup
+```{r}
+length(intersect(OC_LC_Past$gene, ortho.1.to.1_Past.isotigs$gene))
+```
+
+
+```{r}
+past_1.to.1.isogroups_OC_LC <- ortho.1.to.1_Past.isotigs %>% 
+  inner_join(OC_LC_Past, by = "gene")
+
+dim(past_1.to.1.isogroups_OC_LC)
+```
+
+```{r}
+head(past_1.to.1.isogroups_OC_LC)
+```
+
+
+Result:
+No shared response.
+
+
 ##############################################################################
 
 ### Reef-Ojo vs. Reef-Control
 RO_RC
 
 P. porites vs. Siderastrea
+
+```{r}
+RO_RC_Ppor <- read.csv("~/Documents/Rprojects/postdoc\ Rprojects/ODU_postdoc_Rprojects/Paper_Ojo_gene-expression/Porites_porites/host/Ppor_Host_DE_genes_RO_RC_padj.1.csv", header = TRUE) 
+
+RO_RC_Ppor$gene <- as.factor(RO_RC_Ppor$gene)
+head(RO_RC_Ppor)
+```
+
+```{r}
+RO_RC_Sid <- read.csv("~/Documents/Rprojects/postdoc\ Rprojects/ODU_postdoc_Rprojects/Paper_Ojo_gene-expression/Siderastrea/host/Sid_Host_DE_genes_RO_RC_padj.1.csv", header = TRUE) 
+
+RO_RC_Sid$gene <- as.factor(RO_RC_Sid$gene)
+head(RO_RC_Sid)
+```
+
+
+**Sid**
+
+check if any of the values contained in vector A are also in vector B:
+```{r}
+any(RO_RC_Sid$gene %in% multi.ortho.Sid$gene)
+```
+
+Multi-orthogroup list
+```{r}
+length(intersect(RO_RC_Sid$gene, multi.ortho.Sid$gene))
+```
+
+1:1 orthogroup
+```{r}
+length(intersect(RO_RC_Sid$gene, ortho_1.to.1$gene))
+```
+
+```{r}
+sid_multi.isogroups_RO_RC <- multi.ortho.Sid %>% 
+  inner_join(RO_RC_Sid, by = "gene")
+
+dim(sid_multi.isogroups_RO_RC)
+```
+
+```{r}
+head(sid_multi.isogroups_RO_RC)
+```
+
+**orthogroups that are counted more than once in the DEG results table**
+```{r}
+sid_multi.isogroups_RO_RC %>% count(orthogroup) %>% filter(n > 1)
+```
+
+Breakdown of which orthogroups are duplicated 
+```{r}
+sid_multi.isogroups_RO_RC %>% 
+  group_by(orthogroup) %>% 
+  filter(n()>1)
+```
+
+
+```{r}
+ortho_1.to.1 <- ortho_1.to.1 %>% 
+  dplyr::rename(gene = gene_Sid)
+```
+
+
+
+1:1 orthogroups
+```{r}
+sid_1.to.1.isogroups_RO_RC <- ortho_1.to.1 %>% 
+  inner_join(RO_RC_Sid, by = "gene")
+
+dim(sid_1.to.1.isogroups_RO_RC)
+```
+
+```{r}
+head(sid_1.to.1.isogroups_RO_RC)
+```
+
+**orthogroups that are counted more than once in the DEG results table**
+```{r}
+sid_1.to.1.isogroups_RO_RC %>% count(orthogroup) %>% filter(n > 1)
+```
+
+
+
+**P. porites**
+
+Multi-orthogroup list
+```{r}
+length(intersect(RO_RC_Ppor$gene, multi.ortho.Ppor.isotigs$gene))
+```
+
+
+```{r}
+ppor_multi.isogroups_RO_RC <- multi.ortho.Ppor.isotigs %>% 
+  inner_join(RO_RC_Ppor, by = "gene")
+
+dim(ppor_multi.isogroups_RO_RC)
+```
+
+```{r}
+head(ppor_multi.isogroups_RO_RC)
+```
+
+**orthogroups that are counted more than once in the DEG results table**
+```{r}
+ppor_multi.isogroups_RO_RC %>% count(orthogroup) %>% filter(n > 1)
+```
+
+Breakdown of which orthogroups are duplicated 
+```{r}
+ppor_multi.isogroups_RO_RC %>% 
+  group_by(orthogroup) %>% 
+  filter(n()>1)
+```
+
+
+
+1:1 orthogroup
+```{r}
+length(intersect(RO_RC_Ppor$gene, ortho.1.to.1_Ppor.isotigs$gene))
+```
+
+
+Check for overlapping orthogroups between multi-orthogroup Sid and P.por
+```{r}
+length(intersect(sid_multi.isogroups_RO_RC$orthogroup, ppor_multi.isogroups_RO_RC$orthogroup))
+```
+
+
+Result:
+No shared DEG.
+
+
+##############################################################################
+
+If there are any shared DEG:
+
+## filter by DEG direction 
+
+
+### up-regulated
+
+```{r}
+# OO_OC_up <- OO_OC %>%
+#     filter(baseMean > 0 & padj < 0.1)
+```
+
+
+### down-regulated
+
+```{r}
+# OO_OC_down <- OO_OC %>%
+#     filter(baseMean < 0 & padj < 0.1)
+```
 
 
 ##############################################################################
