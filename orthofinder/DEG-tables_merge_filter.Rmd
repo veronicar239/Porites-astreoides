@@ -418,7 +418,7 @@ head(past_multi.isogroups_OO_OC)
 
 **orthogroups that are counted more than once in the DEG results table**
 ```{r}
-past_multi.isogroups_OO_OC %>% count(orthogroup) %>% filter(n > 1)
+past_multi.isogroups_OO_OC %>% dplyr::count(orthogroup) %>% filter(n > 1)
 ```
 
 Breakdown of which orthogroups are duplicated 
@@ -444,7 +444,7 @@ head(past_1.to.1.isogroups_OO_OC)
 
 **orthogroups that are counted more than once in the DEG results table**
 ```{r}
-past_1.to.1.isogroups_OO_OC %>% count(orthogroup) %>% filter(n > 1)
+past_1.to.1.isogroups_OO_OC %>% dplyr::count(orthogroup) %>% filter(n > 1)
 ```
 
 Result:
@@ -519,7 +519,7 @@ head(past_multi.isogroups_OO_LO)
 
 **orthogroups that are counted more than once in the DEG results table**
 ```{r}
-past_multi.isogroups_OO_LO %>% count(orthogroup) %>% filter(n > 1)
+past_multi.isogroups_OO_LO %>% dplyr::count(orthogroup) %>% filter(n > 1)
 ```
 
 Breakdown of which orthogroups are duplicated 
@@ -544,7 +544,7 @@ head(past_1.to.1.isogroups_OO_LO)
 
 **orthogroups that are counted more than once in the DEG results table**
 ```{r}
-past_1.to.1.isogroups_OO_LO %>% count(orthogroup) %>% filter(n > 1)
+past_1.to.1.isogroups_OO_LO %>% dplyr::count(orthogroup) %>% filter(n > 1)
 ```
 
 Result:
@@ -702,7 +702,7 @@ head(sid_multi.isogroups_RO_RC)
 
 **orthogroups that are counted more than once in the DEG results table**
 ```{r}
-sid_multi.isogroups_RO_RC %>% count(orthogroup) %>% filter(n > 1)
+sid_multi.isogroups_RO_RC %>% dplyr::count(orthogroup) %>% filter(n > 1)
 ```
 
 Breakdown of which orthogroups are duplicated 
@@ -734,7 +734,7 @@ head(sid_1.to.1.isogroups_RO_RC)
 
 **orthogroups that are counted more than once in the DEG results table**
 ```{r}
-sid_1.to.1.isogroups_RO_RC %>% count(orthogroup) %>% filter(n > 1)
+sid_1.to.1.isogroups_RO_RC %>% dplyr::count(orthogroup) %>% filter(n > 1)
 ```
 
 
@@ -760,7 +760,7 @@ head(ppor_multi.isogroups_RO_RC)
 
 **orthogroups that are counted more than once in the DEG results table**
 ```{r}
-ppor_multi.isogroups_RO_RC %>% count(orthogroup) %>% filter(n > 1)
+ppor_multi.isogroups_RO_RC %>% dplyr::count(orthogroup) %>% filter(n > 1)
 ```
 
 Breakdown of which orthogroups are duplicated 

@@ -1,0 +1,150 @@
+---
+title: "Venn_Past_Host"
+author: "Veronica Radice"
+date: "19/04/2021"
+output: html_document
+---
+
+# Venn diagrams
+## Differentially expressed genes
+
+## Coral Host
+## *Porites astreoides*
+
+
+### Load packages
+```{r setup, include=FALSE}
+library(VennDiagram)
+```
+
+### Set working directory
+```{r}
+setwd("~/Documents/Rprojects/postdoc\ Rprojects/ODU_postdoc_Rprojects/Paper_Ojo_gene-expression/Porites_astreoides/host/")
+```
+
+
+# Import data
+
+Summary
+```{r}
+deg <- read.csv("DEG_summary_Past_Host.csv", header = TRUE)
+deg <- deg[,2:4]
+deg
+```
+
+## Effect of Origin - corals transplanted to same Destination
+
+Absolute number of DEG adjusted p-value < 0.1
+
+## Lagoon-Ojo vs. Lagoon-Control
+
+```{r}
+de.genes_LO_LC <- readRDS("Past_Host_DE_genes_LO_LC_padj.1.rds")
+de.genes_LO_LC <- as.data.frame(de.genes_LO_LC)
+de.genes_LO_LC$group <- 'LO_LC'
+de.genes_LO_LC$group <- as.factor(de.genes_LO_LC$group)
+
+de.genes_LO_LC$expression <- ifelse(de.genes_LO_LC$log2FoldChange>0, 'up', 'down')
+de.genes_LO_LC$expression <- as.factor(de.genes_LO_LC$expression)
+dim(de.genes_LO_LC)
+```
+
+
+## Ojo-Ojo vs. Lagoon-Ojo
+
+```{r}
+de.genes_OO_LO <- readRDS("Past_Host_DE_genes_OO_LO_padj.1.rds")
+de.genes_OO_LO <- as.data.frame(de.genes_OO_LO)
+de.genes_OO_LO$group <- 'OO_LO'
+de.genes_OO_LO$group <- as.factor(de.genes_OO_LO$group)
+
+de.genes_OO_LO$expression <- ifelse(de.genes_OO_LO$log2FoldChange>0, 'up', 'down')
+de.genes_OO_LO$expression <- as.factor(de.genes_OO_LO$expression)
+dim(de.genes_OO_LO)
+```
+
+## Ojo-Ojo vs. Ojo-Control
+
+```{r}
+de.genes_OO_OC <- readRDS("Past_Host_DE_genes_OO_OC_padj.1.rds")
+de.genes_OO_OC <- as.data.frame(de.genes_OO_OC)
+de.genes_OO_OC$group <- 'OO_OC'
+de.genes_OO_OC$group <- as.factor(de.genes_OO_OC$group)
+
+de.genes_OO_OC$expression <- ifelse(de.genes_OO_OC$log2FoldChange>0, 'up', 'down')
+de.genes_OO_OC$expression <- as.factor(de.genes_OO_OC$expression)
+dim(de.genes_OO_OC)
+```
+
+## Ojo-Control vs. Lagoon-Control
+
+```{r}
+de.genes_OC_LC <- readRDS("Past_Host_DE_genes_OC_LC_padj.1.rds")
+de.genes_OC_LC <- as.data.frame(de.genes_OC_LC)
+de.genes_OC_LC$group <- 'OC_LC'
+de.genes_OC_LC$group <- as.factor(de.genes_OC_LC$group)
+
+de.genes_OC_LC$expression <- ifelse(de.genes_OC_LC$log2FoldChange>0, 'up', 'down')
+de.genes_OC_LC$expression <- as.factor(de.genes_OC_LC$expression)
+dim(de.genes_OC_LC)
+```
+
+
+##############################################################################
+
+# All DEG - 4-way venn comparing Control and Ojo destination pairwise contrasts
+```{r}
+venn.diagram(x = list(de.genes_LO_LC$gene, de.genes_OO_LO$gene, de.genes_OO_OC$gene, de.genes_OC_LC$gene), 
+             category.names = c("Lagoon-Ojo vs Lagoon-Control", "Ojo-Ojo vs Lagoon-Ojo", "Ojo-Ojo vs Ojo-Control", "Ojo-Control vs Lagoon-Control"),
+         filename = 'Past_Host_venn_4-way.png',
+        output = TRUE,
+        imagetype="png",
+        height = 2500, 
+        width = 6000, 
+        resolution = 300,
+        fill=c("cadetblue2", "darkseagreen2", "coral1", "deeppink3"), #, "goldenrod"
+        main.cex = 1.5,
+        sub.cex = 1.5,
+        cat.cex = 1.5,
+        cex = 1.5,
+        cat.default.pos = "outer",
+        #cat.pos = c(-27, 27, 135, 135, 27),
+        #cat.dist = c(0.055, 0.055, 0.055, 0.055, 0.055),
+        main = "Porites astreoides",
+        scaled = FALSE)
+
+#cat.pos = c(0, 0),
+```
+
+# All DEG - 3-way venn comparing Control and Ojo destination pairwise contrasts
+```{r}
+venn.diagram(x = list(de.genes_LO_LC$gene, de.genes_OO_LO$gene, de.genes_OO_OC$gene), 
+             category.names = c("Lagoon-Ojo vs Lagoon-Control", "Ojo-Ojo vs Lagoon-Ojo", "Ojo-Ojo vs Ojo-Control"),
+         filename = 'Past_Host_venn_3-way.png',
+        output = TRUE,
+        imagetype="png",
+        height = 2500, 
+        width = 4500, 
+        resolution = 300,
+        fill=c("cadetblue2", "darkseagreen2", "coral1"), #"deeppink3" , "goldenrod"
+        main.cex = 1.5,
+        sub.cex = 1.5,
+        cat.cex = 1.5,
+        cex = 1.5,
+        cat.default.pos = "outer",
+        cat.pos = c(-27, 27, 0),
+        cat.dist = c(0.055, 0.055, 0.065),
+        main = "Porites astreoides",
+        scaled = FALSE)
+
+#cat.pos = c(0, 0),
+```
+
+
+
+
+### Session Info
+```{r}
+sessionInfo()
+```
+

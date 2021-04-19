@@ -1,0 +1,273 @@
+---
+title: "Barplot_Past_Host"
+author: "Veronica Radice"
+date: "19/04/2021"
+output: html_document
+---
+
+
+# Barplots of Differentially expressed genes
+
+## Coral host
+### *Porites astreoides*
+
+
+### Import libraries
+```{r}
+library(ggplot2)
+library(scales)
+library(dplyr)
+library(plyr)
+```
+
+### Resources
+https://stackoverflow.com/questions/38268741/geom-bar-ggplot2-stacked-grouped-bar-plot-with-positive-and-negative-values-p
+
+
+### Set working directory
+```{r}
+setwd("~/Documents/Rprojects/postdoc\ Rprojects/ODU_postdoc_Rprojects/Paper_Ojo_gene-expression/Porites_astreoides/host/")
+```
+
+
+
+# Effect of Destination Control
+
+Absolute number of DEG adjusted p-value < 0.1
+```{r}
+# import data
+de.genes <- readRDS("Past_Host_DE_genes_OC_LC_padj.1.rds")
+
+# add group pairwise contrast label
+de.genes$group <- 'OC-LC'
+de.genes$group <- as.factor(de.genes$group)
+```
+
+### Count which genes are Upregulated versus Downregulated
+LFC = log2FoldChange
+```{r}
+de.genes$LFC <- ifelse(de.genes$log2FoldChange>0, 'Up', 'Down')
+de.genes$LFC <- as.factor(de.genes$LFC)
+
+summary_DEG <- de.genes %>% dplyr::count(group, LFC)
+summary_DEG$LFC <- factor(summary_DEG$LFC, levels = c("Up", "Down"))
+summary_DEG_1a <- summary_DEG
+
+summary_DEG_1b <- data.frame("group" = "OC-LC", "LFC" = "Down", "n" = 0)
+summary_DEG_1 <- rbind(summary_DEG_1a, summary_DEG_1b)
+
+summary_DEG_1[sapply(summary_DEG_1, is.character)] <- lapply(summary_DEG_1[sapply(summary_DEG_1, is.character)], as.factor)
+
+summary_DEG_1
+```
+
+
+###############################################################################
+
+# Effect of Destination Ojo
+
+Absolute number of DEG adjusted p-value < 0.1
+```{r}
+# import data
+de.genes <- readRDS("Past_Host_DE_genes_OO_LO_padj.1.rds")
+
+# add group pairwise contrast label
+de.genes$group <- 'OO-LO'
+de.genes$group <- as.factor(de.genes$group)
+```
+
+### Count which genes are Upregulated versus Downregulated
+LFC = log2FoldChange
+```{r}
+de.genes$LFC <- ifelse(de.genes$log2FoldChange>0, 'Up', 'Down')
+de.genes$LFC <- as.factor(de.genes$LFC)
+
+summary_DEG <- de.genes %>% dplyr::count(group, LFC)
+summary_DEG$LFC <- factor(summary_DEG$LFC, levels = c("Up", "Down"))
+
+summary_DEG[1,3] <- summary_DEG[1,3]*(-1)
+
+summary_DEG_2 <- summary_DEG
+summary_DEG_2
+```
+
+
+###############################################################################
+
+Absolute number of DEG adjusted p-value < 0.1
+```{r}
+# import data
+de.genes <- readRDS("Past_Host_DE_genes_LO_LC_padj.1.rds")
+
+# add group pairwise contrast label
+de.genes$group <- 'LO-LC'
+de.genes$group <- as.factor(de.genes$group)
+```
+
+### Count which genes are Upregulated versus Downregulated
+LFC = log2FoldChange
+```{r}
+de.genes$LFC <- ifelse(de.genes$log2FoldChange>0, 'Up', 'Down')
+de.genes$LFC <- as.factor(de.genes$LFC)
+
+summary_DEG <- de.genes %>% dplyr::count(group, LFC)
+summary_DEG$LFC <- factor(summary_DEG$LFC, levels = c("Up", "Down"))
+
+summary_DEG[1,3] <- summary_DEG[1,3]*(-1)
+
+summary_DEG_3 <- summary_DEG
+summary_DEG_3
+```
+
+###############################################################################
+
+
+Absolute number of DEG adjusted p-value < 0.1
+```{r}
+# import data
+de.genes <- readRDS("Past_Host_DE_genes_OO_OC_padj.1.rds")
+
+# add group pairwise contrast label
+de.genes$group <- 'OO-OC'
+de.genes$group <- as.factor(de.genes$group)
+```
+
+### Count which genes are Upregulated versus Downregulated
+LFC = log2FoldChange
+```{r}
+de.genes$LFC <- ifelse(de.genes$log2FoldChange>0, 'Up', 'Down')
+de.genes$LFC <- as.factor(de.genes$LFC)
+
+summary_DEG <- de.genes %>% dplyr::count(group, LFC)
+summary_DEG$LFC <- factor(summary_DEG$LFC, levels = c("Up", "Down"))
+
+summary_DEG[1,3] <- summary_DEG[1,3]*(-1)
+
+summary_DEG_4 <- summary_DEG
+summary_DEG_4
+```
+
+
+###############################################################################
+
+# Effect of overall low pH vs. ambient pH
+*However, no comparison of sites*
+
+Second contrast
+
+Absolute number of DEG adjusted p-value < 0.1
+```{r}
+# import data
+de.genes <- readRDS("Past_Host_DE_genes_OO_LC_padj.1.rds")
+
+# add group pairwise contrast label
+de.genes$group <- 'OO-LC'
+de.genes$group <- as.factor(de.genes$group)
+```
+
+### Count which genes are Upregulated versus Downregulated
+LFC = log2FoldChange
+```{r}
+de.genes$LFC <- ifelse(de.genes$log2FoldChange>0, 'Up', 'Down')
+de.genes$LFC <- as.factor(de.genes$LFC)
+
+summary_DEG <- de.genes %>% dplyr::count(group, LFC)
+summary_DEG$LFC <- factor(summary_DEG$LFC, levels = c("Up", "Down"))
+
+summary_DEG[1,3] <- summary_DEG[1,3]*(-1)
+
+summary_DEG_5 <- summary_DEG
+summary_DEG_5
+```
+
+
+###############################################################################
+
+# DEG summary
+
+```{r}
+summary2 <- rbind(summary_DEG_1, summary_DEG_2, summary_DEG_3, summary_DEG_4)
+
+summary2
+```
+
+
+```{r}
+summary2$Destination <- c("Control", "Control", "Ojo", "Ojo", "Ojo vs. Control", "Ojo vs. Control", "Ojo vs. Control", "Ojo vs. Control")
+
+summary2$Destination <- as.factor(summary2$Destination)
+summary2$Destination <- factor(summary2$Destination, levels = c("Control", "Ojo", "Ojo vs. Control"))
+
+summary2
+```
+
+
+```{r}
+#levels(summary2$group)
+# "OC-LC" "OO-LO" "LO-LC" "OO-OC"
+summary2$group <- factor(summary2$group, levels = c("OC-LC", "OO-LO", "LO-LC", "OO-OC"))
+
+write.csv(file = "DEG_summary_Past_Host.csv", x = summary2)
+```
+
+
+# Combined barplot
+```{r}
+plot.combo <- ggplot(summary2, aes(x = group, fill = LFC)) + 
+  facet_wrap(~Destination, scales = "free_x") +
+  geom_bar(data=subset(summary2, LFC=="Up"), aes(y=n, fill = LFC), stat = "identity", width=0.6) + #, binwidth=0
+  geom_bar(data=subset(summary2, LFC=="Down"), aes(y=n, fill = LFC), stat = "identity", width=0.6) + #, binwidth=0
+  geom_text(data=subset(summary2, LFC=="Up"), aes(group, n, label = n), position = position_dodge(width=0.9), vjust = -0.5) +
+  geom_text(data=subset(summary2, LFC=="Down"), aes(group, n, label = -n), position = position_dodge(width=0.9), vjust = 1.5) +
+  scale_fill_manual("LFC", values=c("black", "#56B4E9"), labels=c("Down-regulated", "Up-regulated"), guide=guide_legend(reverse=TRUE)) + #colorblind friendly
+  ylab("Differentially expressed genes") +
+  xlab("Transplantation") + 
+  scale_y_continuous(limits = c(-650, 620), breaks = seq(-600, 600, by = 200)) +
+  theme_classic() +
+  theme(legend.position = c(0.16, 0.18), panel.background = element_rect(colour = "black"), axis.text.x = element_text(angle = 45, vjust = 0.5)) 
+
+#legend.position = "bottom",
+#axis.text.x=element_text(vjust=0.5, size=10, face="italic"), 
+
+plot.combo
+```
+
+```{r}
+# save plot
+ggsave("Past_Host_DEG_barplot.pdf", plot = plot.combo,  width = 5, height = 4, units = "in", dpi = 1200) #width = 6.5, height = 4.5
+```
+
+
+# Barplot without facet wrap
+```{r}
+plot.combo <- ggplot(summary2, aes(x = group, fill = LFC)) + 
+  geom_bar(data=subset(summary2, LFC=="Up"), aes(y=n, fill = LFC), stat = "identity", width=0.6) + #, binwidth=0
+  geom_bar(data=subset(summary2, LFC=="Down"), aes(y=n, fill = LFC), stat = "identity", width=0.6) + #, binwidth=0
+  geom_text(data=subset(summary2, LFC=="Up"), aes(group, n, label = n), position = position_dodge(width=0.9), vjust = -0.5) +
+  geom_text(data=subset(summary2, LFC=="Down"), aes(group, n, label = -n), position = position_dodge(width=0.9), vjust = 1.5) +
+  scale_fill_manual("LFC", values=c("black", "#56B4E9"), labels=c("Down-regulated", "Up-regulated"), guide=guide_legend(reverse=TRUE)) + #colorblind friendly
+  ylab("Differentially expressed genes") +
+  xlab("Transplantation") + 
+  scale_y_continuous(limits = c(-650, 620), breaks = seq(-600, 600, by = 200)) +
+  theme_classic() +
+  theme(legend.position = c(0.2, 0.18),  panel.background = element_rect(colour = "black"), axis.text.x = element_text(angle = 45, vjust = 0.5)) 
+
+#legend.position = "bottom",
+#axis.text.x=element_text(vjust=0.5, size=10, face="italic"), 
+
+plot.combo
+```
+
+
+```{r}
+# save plot
+ggsave("Past_Host_DEG_barplot_no-facetwrap.pdf", plot = plot.combo,  width = 5, height = 4, units = "in", dpi = 1200) #width = 6.5, height = 4.5
+```
+
+
+## Session Info
+```{r}
+sessionInfo()
+```
+
+
