@@ -1,0 +1,924 @@
+---
+title: "PCA_Past_Sym"
+author: "Veronica Radice"
+date: "21/04/2021"
+output: html_document
+---
+
+# Principal Compoment Analysis
+## PERMANOVA
+
+# *Porites astreoides*
+## Symbionts
+
+
+### Import libraries
+```{r setup, include=FALSE}
+library(DESeq2)
+library(ggplot2)
+library(tidyverse)
+library(dplyr)
+library(plyr)
+library(data.table)
+library(cowplot)
+library(vegan)
+library(RColorBrewer)
+
+#library(devtools) 
+#install_github("pmartinezarbizu/pairwiseAdonis/pairwiseAdonis")
+library(pairwiseAdonis) 
+# cite: Martinez Arbizu, P. (2020). pairwiseAdonis: Pairwise multilevel comparison using adonis. R package version 0.4
+
+# https://github.com/katiejolly/nationalparkcolors
+
+#devtools::install_github("katiejolly/nationalparkcolors")
+library(nationalparkcolors) #palettes
+names(park_palettes)
+```
+
+
+### National Park color palettes
+```{r message=FALSE}
+# check palette
+pal <- park_palette("Arches")
+pal
+
+# select palette
+chosen.palette <- palette(park_palette("Arches")) #BlueRidgePkwy
+```
+
+
+```{r}
+alt.palette <- c("#8c510a", "#d8b365", "#f6e8c3", "#c7eae5", "#5ab4ac", "#01665e")
+```
+
+
+# Set working directory
+```{r}
+setwd("~/Documents/Rprojects/postdoc\ Rprojects/ODU_postdoc_Rprojects/Paper_Ojo_gene-expression/Porites_astreoides/symbiont/")
+```
+
+# Import metadata
+```{r}
+meta <- read.csv("~/Documents/Rprojects/postdoc\ Rprojects/ODU_postdoc_Rprojects/Paper_Ojo_gene-expression/Porites_astreoides/P_astreoides_Year-2_metadata.csv", header=TRUE, row.names=1)
+
+# Remove all samples that were transplanted to the Destination Ojo.Norte
+# There is no control site for Norte Ojo
+# For now, we are focused on samples transplanted to Laja Control or Laja Ojo sites
+# This is consistent with analyses for the other 2 species in the experiment
+# Also, group sample size is too small for Ojo.Norte destination
+
+meta <- subset(meta, Destination_name != "Ojo.Norte")
+```
+
+
+```{r}
+meta$Destination_type <- revalue(meta$Destination_type, c("control" = "Control", "ojo" = "Ojo"))
+
+meta$Origin_type <- revalue(meta$Origin_type, c("control" = "Lagoon", "ojo" = "Ojo"))
+
+meta <- meta %>% unite(group, Origin_type, Destination_type, sep = ".", remove = FALSE)
+
+
+meta[sapply(meta, is.character)] <- lapply(meta[sapply(meta, is.character)], 
+                                       as.factor)
+# Colony_ID is equivalent to genotype
+meta$Colony_ID <- as.factor(meta$Colony_ID)
+
+meta <- meta %>% unite(colony_sample, Origin_type, Destination_type, Colony_ID, id, sep = ".", remove = FALSE)
+
+levels(meta$group)
+```
+
+### select relevant metadata
+```{r}
+meta <- dplyr::select(meta, Colony_ID, group, Origin_name, Origin_type, Destination_name, Destination_type, pH_Destination, colony_sample)
+```
+
+### Remove sample with >85% of null/zero counts
+
+As in DESeq2 analysis
+```{r}
+drop <- c("NC_292_La_Pa_yr2", "NC_320_La_Pa_yr2", "NC_311_La_Pa_yr2")
+
+meta <- meta[!(row.names(meta) %in% drop),]
+meta <- droplevels(meta)
+dim(meta)
+```
+
+### data summary
+```{r}
+meta %>%
+  group_by(group) %>%
+  dplyr::summarise(count = n())
+```
+
+
+####################################################################
+
+# Normalized gene count data
+
+Import normalized gene count data (from function counts(dds, normalized=TRUE)) 
+   --> Overall expression
+
+```{r}
+norm.genes <- readRDS(file = "counts_normalized_Past_Sym.rds")
+norm.genes <- as.data.frame.array(norm.genes)
+```
+
+### Check that sample names match in both files
+```{r}
+all(colnames(norm.genes) %in% rownames(meta))
+all(colnames(norm.genes) == rownames(meta))
+# If your data did not match, you could use the match() function to rearrange them to be matching.
+```
+
+
+
+####################################################################
+
+# Import transformed counts
+```{r}
+counts.transformed.vst <- readRDS(file = "counts_vst.BlindFalse_Past_Sym.rds")
+```
+
+
+####################################################################
+
+# Differentially expressed genes
+
+Import table for *each pairwise group* of Differentially Expressed gene list (pvalue < 0.05) from normalized gene count data.
+
+```{r}
+de.genes.LO_LC <- readRDS(file = "Past_Sym_LO_LC_pval.05.rds")
+de.genes.LO_LC <- as.data.frame(de.genes.LO_LC)
+dim(de.genes.LO_LC) 
+```
+
+
+```{r}
+de.genes.OO_LO <- readRDS(file = "Past_Sym_OO_LO_pval.05.rds")
+de.genes.OO_LO <- as.data.frame(de.genes.OO_LO)
+dim(de.genes.OO_LO) 
+```
+
+
+```{r}
+de.genes.OO_OC <- readRDS(file = "Past_Sym_OO_OC_pval.05.rds")
+de.genes.OO_OC <- as.data.frame(de.genes.OO_OC)
+dim(de.genes.OO_OC) 
+```
+
+
+```{r}
+de.genes.OC_LC <- readRDS(file = "Past_Sym_OC_LC_pval.05.rds")
+de.genes.OC_LC <- as.data.frame(de.genes.OC_LC)
+dim(de.genes.OC_LC)
+```
+
+
+####################################################################
+
+# Principal Component Analysis (PCA)
+## Total expression
+
+By default the function uses the top 500 most variable genes. You can change this by adding the ntop argument and specifying how many genes you want to use to draw the plot.
+
+ntop	
+- number of top genes to use for principal components, selected by highest row variance
+
+## Total expression - by transplant treatment group
+ntop = 1000
+```{r}
+# save plot
+#pdf("Past_Sym_PCA_total-exp_group.pdf")
+
+pcadata = DESeq2::plotPCA(counts.transformed.vst, intgroup = c("group"), returnData = TRUE)
+percentVar = round(100 * attr(pcadata, "percentVar"))
+pca = prcomp(t(assay(counts.transformed.vst)), center = TRUE, scale. = FALSE)
+
+plot <- DESeq2::plotPCA(counts.transformed.vst, returnData = TRUE, intgroup = c("group"), ntop = 1000) %>% 
+      ggplot(aes(x = PC1, y = PC2)) +
+      geom_point(aes(color = group), size = 1.3) +
+      stat_ellipse(geom = "polygon", alpha = 1/10, aes(fill = group)) +
+      scale_color_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) + #chosen.palette
+      scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
+      xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+      ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+      labs(color = "Origin.Destination", fill = "Origin.Destination") +
+      theme_cowplot()
+
+plot
+
+#dev.off()
+
+# good palette
+# c("gold2", "forestgreen", "black", "firebrick", "darkorange1", "#847CA3") - favorite
+# c("forestgreen", "black", "#F2D56F", "firebrick", "#F4A65E", "#847CA3")
+# c("#F2D56F", "forestgreen", "black", "firebrick", "#F4A65E", "#847CA3") reordered
+
+# Arches
+# "#EC8FA3" "#FCBA65" "#FAECCF" "#8D7F99" "#8C9D57" "#163343"
+
+# Arches reordered
+# "#EC8FA3" "#FCBA65" "#163343" "#8D7F99" "#8C9D57" "#FAECCF"
+# c("#EC8FA3", "#FCBA65", "#163343", "cornflowerblue", "#8C9D57", "bisque3") - favorite
+# c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3") - new fave
+# "#8C9D57" "bisque3" "#163343" "cornflowerblue" "#EC8FA3" "#FCBA65" - also good
+
+# reordered
+# c("#1A1237", "#E45A5A", "#80792B", "#F2D56F", "#F4A65E", "#847CA3")
+
+#"#847CA3" "#E45A5A" "#F4A65E" "#80792B" "#F2D56F" "#1A1237"
+```
+
+save plot
+```{r}
+# save plot
+pdf("Past_Sym_PCA_total-exp_group.pdf")
+
+pcadata = DESeq2::plotPCA(counts.transformed.vst, intgroup = c("group"), returnData = TRUE)
+percentVar = round(100 * attr(pcadata, "percentVar"))
+pca = prcomp(t(assay(counts.transformed.vst)), center = TRUE, scale. = FALSE)
+
+plot <- DESeq2::plotPCA(counts.transformed.vst, returnData = TRUE, intgroup = c("group"), ntop = 1000) %>% 
+      ggplot(aes(x = PC1, y = PC2)) +
+      geom_point(aes(color = group), size = 1.3) +
+      stat_ellipse(geom = "polygon", alpha = 1/10, aes(fill = group)) +
+      scale_color_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) + #chosen.palette
+      scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
+      xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+      ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+      labs(color = "Origin.Destination", fill = "Origin.Destination") +
+      theme_cowplot()
+
+plot
+
+dev.off()
+```
+
+
+for comparison, ntop = 500
+(similar)
+```{r}
+pcadata = DESeq2::plotPCA(counts.transformed.vst, intgroup = c("group"), returnData = TRUE)
+percentVar = round(100 * attr(pcadata, "percentVar"))
+pca = prcomp(t(assay(counts.transformed.vst)), center = TRUE, scale. = FALSE)
+
+plot <- DESeq2::plotPCA(counts.transformed.vst, returnData = TRUE, intgroup = c("group"), ntop = 500) %>% 
+      ggplot(aes(x = PC1, y = PC2)) +
+      geom_point(aes(colour = group), size = 1.3) +
+      stat_ellipse(geom = "polygon", alpha = 1/10, aes(fill = group)) +
+      xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+      ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+      theme_cowplot()
+
+plot
+```
+
+
+test alternate colors
+```{r}
+pcadata = DESeq2::plotPCA(counts.transformed.vst, intgroup = c("group"), returnData = TRUE)
+percentVar = round(100 * attr(pcadata, "percentVar"))
+pca = prcomp(t(assay(counts.transformed.vst)), center = TRUE, scale. = FALSE)
+
+plot <- DESeq2::plotPCA(counts.transformed.vst, returnData = TRUE, intgroup = c("group"), ntop = 1000) %>% 
+      ggplot(aes(x = PC1, y = PC2)) +
+      geom_point(aes(color = group), size = 1.3) +
+      stat_ellipse(geom = "polygon", alpha = 1/10, aes(fill = group)) +
+      scale_color_manual(values = c("gold2", "forestgreen", "black", "firebrick", "darkorange1", "#847CA3")) + #chosen.palette
+      scale_fill_manual(values = c("gold2", "forestgreen", "black", "firebrick", "darkorange1", "#847CA3")) +
+      xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+      ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+      labs(color = "Origin.Destination", fill = "Origin.Destination") +
+      theme_cowplot()
+
+plot
+```
+
+
+# Total expression - Colony ID & Sample ID
+```{r message=FALSE}
+pcadata = DESeq2::plotPCA(counts.transformed.vst, intgroup = c("group"), returnData = TRUE)
+percentVar = round(100 * attr(pcadata, "percentVar"))
+pca = prcomp(t(assay(counts.transformed.vst)), center = TRUE, scale. = FALSE)
+
+plot <- DESeq2::plotPCA(counts.transformed.vst, returnData = TRUE, intgroup = c("group"), ntop = 1000) %>% 
+      ggplot(aes(x = PC1, y = PC2)) +
+      geom_point(aes(color = meta$colony_sample), size = 1.3) +
+      stat_ellipse(geom = "polygon", alpha = 1/10, aes(fill = meta$colony_sample)) +
+      xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+      ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+      theme_cowplot()
+
+plot
+```
+
+
+# Total expression - Origin
+```{r}
+pcadata = DESeq2::plotPCA(counts.transformed.vst, intgroup = c("Origin_name"), returnData = TRUE)
+percentVar = round(100 * attr(pcadata, "percentVar"))
+pca = prcomp(t(assay(counts.transformed.vst)), center = TRUE, scale. = FALSE)
+
+plot <- DESeq2::plotPCA(counts.transformed.vst, returnData = TRUE, intgroup = c("Origin_name"), ntop = 1000) %>% 
+      ggplot(aes(x = PC1, y = PC2)) +
+      geom_point(aes(color = Origin_name), size = 1.3) +
+      stat_ellipse(geom = "polygon", alpha = 1/10, aes(fill = Origin_name)) +
+      scale_color_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) + #chosen.palette
+      scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
+      xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+      ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+      labs(color = "Origin", fill = "Origin") +
+      theme_cowplot()
+
+plot
+```
+
+
+# Total expression - Destination:  Ojo vs. Control
+```{r}
+pcadata = DESeq2::plotPCA(counts.transformed.vst, intgroup = c("pH_Destination"), returnData = TRUE)
+percentVar = round(100 * attr(pcadata, "percentVar"))
+pca = prcomp(t(assay(counts.transformed.vst)), center = TRUE, scale. = FALSE)
+
+plot <- DESeq2::plotPCA(counts.transformed.vst, returnData = TRUE, intgroup = c("pH_Destination"), ntop = 1000) %>% 
+      ggplot(aes(x = PC1, y = PC2)) +
+      geom_point(aes(color = pH_Destination), size = 1.3) +
+      stat_ellipse(geom = "polygon", alpha = 1/10, aes(fill = pH_Destination)) +
+      scale_color_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) + #chosen.palette
+      scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
+      xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+      ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+      labs(color = "pH (Destination)", fill = "pH (Destination)") +
+      theme_cowplot()
+
+plot
+```
+
+# Total expression - Colony (genotype)
+```{r message=FALSE}
+pcadata = DESeq2::plotPCA(counts.transformed.vst, intgroup = c("Colony_ID"), returnData = TRUE)
+percentVar = round(100 * attr(pcadata, "percentVar"))
+pca = prcomp(t(assay(counts.transformed.vst)), center = TRUE, scale. = FALSE)
+
+plot <- DESeq2::plotPCA(counts.transformed.vst, returnData = TRUE, intgroup = c("Colony_ID"), ntop = 1000) %>% 
+      ggplot(aes(x = PC1, y = PC2)) +
+      geom_point(aes(colour = Colony_ID), size = 2) +
+      xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+      ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+      labs(color = "Colony_ID", fill = "Colony_ID") +
+      theme_cowplot()
+
+plot
+```
+
+
+##############################################################################
+
+
+## PCA - all indiv. - LO_LC
+```{r}
+# extract row names from DE gene list
+rownames(de.genes.LO_LC) <- de.genes.LO_LC[,1]
+
+sigChanges <- rownames(de.genes.LO_LC)[de.genes.LO_LC$pvalue < 0.05 & !is.na(de.genes.LO_LC$pvalue)]
+
+counts_de <- counts.transformed.vst[rownames(counts.transformed.vst) %in% sigChanges,]
+
+dim(counts_de)
+```
+
+```{r}
+pcadata = DESeq2::plotPCA(counts_de, intgroup = c("group"), returnData = TRUE)
+percentVar = round(100 * attr(pcadata, "percentVar"))
+pca = prcomp(t(assay(counts_de)), center = TRUE, scale. = FALSE)
+
+plot <- DESeq2::plotPCA(counts_de, returnData = TRUE, intgroup = c("group")) %>% 
+      ggplot(aes(x = PC1, y = PC2)) +
+      geom_point(aes(color = group), size = 1.3) +
+      stat_ellipse(geom = "polygon", alpha = 1/10, aes(fill = group)) +
+      scale_color_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) + #chosen.palette
+      scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
+      xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+      ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+      labs(title = "Lagoon-Ojo vs. Lagoon-Control (602 genes)") +
+      labs(color = "Origin.Destination", fill = "Origin.Destination") +
+      theme_cowplot()
+
+plot
+```
+
+save plot
+```{r}
+# save plot
+pdf("Past_Sym_PCA_LO_LC_all-indiv.pdf")
+
+pcadata = DESeq2::plotPCA(counts_de, intgroup = c("group"), returnData = TRUE)
+percentVar = round(100 * attr(pcadata, "percentVar"))
+pca = prcomp(t(assay(counts_de)), center = TRUE, scale. = FALSE)
+
+plot <- DESeq2::plotPCA(counts_de, returnData = TRUE, intgroup = c("group")) %>% 
+      ggplot(aes(x = PC1, y = PC2)) +
+      geom_point(aes(color = group), size = 1.3) +
+      stat_ellipse(geom = "polygon", alpha = 1/10, aes(fill = group)) +
+      scale_color_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) + #chosen.palette
+      scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
+      xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+      ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+      labs(title = "Lagoon-Ojo vs. Lagoon-Control (602 genes)") +
+      labs(color = "Origin.Destination", fill = "Origin.Destination") +
+      theme_cowplot()
+
+plot
+
+dev.off()
+```
+
+## PCA - subset indiv. - LO_LC
+```{r}
+# extract row names from DE gene list
+rownames(de.genes.LO_LC) <- de.genes.LO_LC[,1]
+
+sigChanges <- rownames(de.genes.LO_LC)[de.genes.LO_LC$pvalue < 0.05 & !is.na(de.genes.LO_LC$pvalue)]
+
+# select relevant sample columns for the given pairwise comparison
+colnames(counts.transformed.vst)
+counts_de <- counts.transformed.vst[,c(1:9,17:21)]
+
+counts_de <- counts_de[rownames(counts.transformed.vst) %in% sigChanges,]
+
+dim(counts_de)
+```
+
+```{r}
+# save plot
+#pdf("Past_Sym_PCA_LO_LC_subset.pdf")
+
+pcadata = DESeq2::plotPCA(counts_de, intgroup = c("group"), returnData = TRUE)
+percentVar = round(100 * attr(pcadata, "percentVar"))
+pca = prcomp(t(assay(counts_de)), center = TRUE, scale. = FALSE)
+
+plot <- DESeq2::plotPCA(counts_de, returnData = TRUE, intgroup = c("group")) %>% 
+      ggplot(aes(x = PC1, y = PC2)) +
+      geom_point(aes(color = group), size = 1.3) +
+      stat_ellipse(geom = "polygon", alpha = 1/10, aes(fill = group)) +
+      scale_color_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) + #chosen.palette
+      scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
+      xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+      ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+      labs(title = "Lagoon-Ojo vs. Lagoon-Control (602 genes)") +
+      labs(color = "Origin.Destination", fill = "Origin.Destination") +
+      theme_cowplot() 
+
+plot 
+
+#dev.off()
+```
+
+check
+```{r}
+dim(counts_de)
+dim(de.genes.LO_LC)
+colnames(counts_de)
+```
+
+
+
+##############################################################################
+
+## PCA - all indiv. - OO_OC
+```{r}
+# extract row names from DE gene list
+rownames(de.genes.OO_OC) <- de.genes.OO_OC[,1]
+
+sigChanges <- rownames(de.genes.OO_OC)[de.genes.OO_OC$pvalue < 0.05 & !is.na(de.genes.OO_OC$pvalue)]
+
+counts_de <- counts.transformed.vst[rownames(counts.transformed.vst) %in% sigChanges,]
+
+dim(counts_de)
+```
+
+```{r}
+pcadata = DESeq2::plotPCA(counts_de, intgroup = c("group"), returnData = TRUE)
+percentVar = round(100 * attr(pcadata, "percentVar"))
+pca = prcomp(t(assay(counts_de)), center = TRUE, scale. = FALSE)
+
+plot <- DESeq2::plotPCA(counts_de, returnData = TRUE, intgroup = c("group")) %>% 
+      ggplot(aes(x = PC1, y = PC2)) +
+      geom_point(aes(color = group), size = 1.3) +
+      stat_ellipse(geom = "polygon", alpha = 1/10, aes(fill = group)) +
+      scale_color_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) + #chosen.palette
+      scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
+      xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+      ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+      labs(title = "Ojo-Ojo vs. Ojo-Control (773 genes)") +
+      labs(color = "Origin.Destination", fill = "Origin.Destination") +
+      theme_cowplot()
+
+plot
+```
+
+save plot
+```{r}
+# save plot
+pdf("Past_Sym_PCA_OO_OC_all-indiv.pdf")
+
+pcadata = DESeq2::plotPCA(counts_de, intgroup = c("group"), returnData = TRUE)
+percentVar = round(100 * attr(pcadata, "percentVar"))
+pca = prcomp(t(assay(counts_de)), center = TRUE, scale. = FALSE)
+
+plot <- DESeq2::plotPCA(counts_de, returnData = TRUE, intgroup = c("group")) %>% 
+      ggplot(aes(x = PC1, y = PC2)) +
+      geom_point(aes(color = group), size = 1.3) +
+      stat_ellipse(geom = "polygon", alpha = 1/10, aes(fill = group)) +
+      scale_color_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) + #chosen.palette
+      scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
+      xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+      ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+      labs(title = "Ojo-Ojo vs. Ojo-Control (773 genes)") +
+      labs(color = "Origin.Destination", fill = "Origin.Destination") +
+      theme_cowplot()
+
+plot
+
+dev.off()
+```
+
+## PCA - subset indiv. - OO_OC
+```{r}
+# extract row names from DE gene list
+rownames(de.genes.OO_OC) <- de.genes.OO_OC[,1]
+
+sigChanges <- rownames(de.genes.OO_OC)[de.genes.OO_OC$pvalue < 0.05 & !is.na(de.genes.OO_OC$pvalue)]
+
+# select relevant sample columns for the given pairwise comparison
+colnames(counts.transformed.vst)
+counts_de <- counts.transformed.vst[,c(10:16,22:29)]
+
+counts_de <- counts_de[rownames(counts.transformed.vst) %in% sigChanges,]
+
+dim(counts_de)
+```
+
+```{r}
+# save plot
+#pdf("Past_Sym_PCA_OO_OC_subset.pdf")
+
+pcadata = DESeq2::plotPCA(counts_de, intgroup = c("group"), returnData = TRUE)
+percentVar = round(100 * attr(pcadata, "percentVar"))
+pca = prcomp(t(assay(counts_de)), center = TRUE, scale. = FALSE)
+
+plot <- DESeq2::plotPCA(counts_de, returnData = TRUE, intgroup = c("group")) %>% 
+      ggplot(aes(x = PC1, y = PC2)) +
+      geom_point(aes(color = group), size = 1.3) +
+      stat_ellipse(geom = "polygon", alpha = 1/10, aes(fill = group)) +
+      scale_color_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) + #chosen.palette
+      scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
+      xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+      ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+      labs(title = "Ojo-Ojo vs. Ojo-Control (773 genes)") +
+      labs(color = "Origin.Destination", fill = "Origin.Destination") +
+      theme_cowplot() 
+
+plot 
+
+#dev.off()
+```
+
+check
+```{r}
+dim(counts_de)
+dim(de.genes.OO_OC)
+colnames(counts_de)
+```
+
+
+
+##############################################################################
+
+## PCA - all indiv. - OC_LC
+```{r}
+# extract row names from DE gene list
+rownames(de.genes.OC_LC) <- de.genes.OC_LC[,1]
+
+sigChanges <- rownames(de.genes.OC_LC)[de.genes.OC_LC$pvalue < 0.05 & !is.na(de.genes.OC_LC$pvalue)]
+
+counts_de <- counts.transformed.vst[rownames(counts.transformed.vst) %in% sigChanges,]
+
+dim(counts_de)
+```
+
+```{r}
+pcadata = DESeq2::plotPCA(counts_de, intgroup = c("group"), returnData = TRUE)
+percentVar = round(100 * attr(pcadata, "percentVar"))
+pca = prcomp(t(assay(counts_de)), center = TRUE, scale. = FALSE)
+
+plot <- DESeq2::plotPCA(counts_de, returnData = TRUE, intgroup = c("group")) %>% 
+      ggplot(aes(x = PC1, y = PC2)) +
+      geom_point(aes(color = group), size = 1.3) +
+      stat_ellipse(geom = "polygon", alpha = 1/10, aes(fill = group)) +
+      scale_color_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) + #chosen.palette
+      scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
+      xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+      ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+      labs(title = "Ojo-Control vs. Lagoon-Control (305 genes)") +
+      labs(color = "Origin.Destination", fill = "Origin.Destination") +
+      theme_cowplot()
+
+plot
+```
+
+save plot
+```{r}
+# save plot
+pdf("Past_Sym_PCA_OC_LC_all-indiv.pdf")
+
+pcadata = DESeq2::plotPCA(counts_de, intgroup = c("group"), returnData = TRUE)
+percentVar = round(100 * attr(pcadata, "percentVar"))
+pca = prcomp(t(assay(counts_de)), center = TRUE, scale. = FALSE)
+
+plot <- DESeq2::plotPCA(counts_de, returnData = TRUE, intgroup = c("group")) %>% 
+      ggplot(aes(x = PC1, y = PC2)) +
+      geom_point(aes(color = group), size = 1.3) +
+      stat_ellipse(geom = "polygon", alpha = 1/10, aes(fill = group)) +
+      scale_color_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) + #chosen.palette
+      scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
+      xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+      ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+      labs(title = "Ojo-Control vs. Lagoon-Control (305 genes)") +
+      labs(color = "Origin.Destination", fill = "Origin.Destination") +
+      theme_cowplot()
+
+plot
+
+dev.off()
+```
+
+## PCA - subset indiv. - OC_LC
+```{r}
+# extract row names from DE gene list
+rownames(de.genes.OC_LC) <- de.genes.OC_LC[,1]
+
+sigChanges <- rownames(de.genes.OC_LC)[de.genes.OC_LC$pvalue < 0.05 & !is.na(de.genes.OC_LC$pvalue)]
+
+# select relevant sample columns for the given pairwise comparison
+colnames(counts.transformed.vst)
+counts_de <- counts.transformed.vst[,c(1:9,22:29)]
+
+counts_de <- counts_de[rownames(counts.transformed.vst) %in% sigChanges,]
+
+dim(counts_de)
+```
+
+```{r}
+# save plot
+#pdf("Past_Sym_PCA_OC_LC_subset.pdf")
+
+pcadata = DESeq2::plotPCA(counts_de, intgroup = c("group"), returnData = TRUE)
+percentVar = round(100 * attr(pcadata, "percentVar"))
+pca = prcomp(t(assay(counts_de)), center = TRUE, scale. = FALSE)
+
+plot <- DESeq2::plotPCA(counts_de, returnData = TRUE, intgroup = c("group")) %>% 
+      ggplot(aes(x = PC1, y = PC2)) +
+      geom_point(aes(color = group), size = 1.3) +
+      stat_ellipse(geom = "polygon", alpha = 1/10, aes(fill = group)) +
+      scale_color_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) + #chosen.palette
+      scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
+      xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+      ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+      labs(title = "Ojo-Control vs. Lagoon-Control (305 genes)") +
+      labs(color = "Origin.Destination", fill = "Origin.Destination") +
+      theme_cowplot() 
+
+plot 
+
+#dev.off()
+```
+
+check
+```{r}
+dim(counts_de)
+dim(de.genes.OC_LC)
+colnames(counts_de)
+```
+
+
+
+##############################################################################
+
+
+## PCA - all indiv. - OO_LO
+```{r}
+# extract row names from DE gene list
+rownames(de.genes.OO_LO) <- de.genes.OO_LO[,1]
+
+sigChanges <- rownames(de.genes.OO_LO)[de.genes.OO_LO$pvalue < 0.05 & !is.na(de.genes.OO_LO$pvalue)]
+
+counts_de <- counts.transformed.vst[rownames(counts.transformed.vst) %in% sigChanges,]
+
+dim(counts_de)
+```
+
+```{r}
+pcadata = DESeq2::plotPCA(counts_de, intgroup = c("group"), returnData = TRUE)
+percentVar = round(100 * attr(pcadata, "percentVar"))
+pca = prcomp(t(assay(counts_de)), center = TRUE, scale. = FALSE)
+
+plot <- DESeq2::plotPCA(counts_de, returnData = TRUE, intgroup = c("group")) %>% 
+      ggplot(aes(x = PC1, y = PC2)) +
+      geom_point(aes(color = group), size = 1.3) +
+      stat_ellipse(geom = "polygon", alpha = 1/10, aes(fill = group)) +
+      scale_color_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) + #chosen.palette
+      scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
+      xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+      ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+      labs(title = "Ojo-Ojo vs. Lagoon-Ojo (380 genes)") +
+      labs(color = "Origin.Destination", fill = "Origin.Destination") +
+      theme_cowplot()
+
+plot
+```
+
+save plot
+```{r}
+# save plot
+pdf("Past_Sym_PCA_OO_LO_all-indiv.pdf")
+
+pcadata = DESeq2::plotPCA(counts_de, intgroup = c("group"), returnData = TRUE)
+percentVar = round(100 * attr(pcadata, "percentVar"))
+pca = prcomp(t(assay(counts_de)), center = TRUE, scale. = FALSE)
+
+plot <- DESeq2::plotPCA(counts_de, returnData = TRUE, intgroup = c("group")) %>% 
+      ggplot(aes(x = PC1, y = PC2)) +
+      geom_point(aes(color = group), size = 1.3) +
+      stat_ellipse(geom = "polygon", alpha = 1/10, aes(fill = group)) +
+      scale_color_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) + #chosen.palette
+      scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
+      xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+      ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+      labs(title = "Ojo-Ojo vs. Lagoon-Ojo (380 genes)") +
+      labs(color = "Origin.Destination", fill = "Origin.Destination") +
+      theme_cowplot()
+
+plot
+
+dev.off()
+```
+
+## PCA - subset indiv. - OO_LO
+```{r}
+# extract row names from DE gene list
+rownames(de.genes.OO_LO) <- de.genes.OO_LO[,1]
+
+sigChanges <- rownames(de.genes.OO_LO)[de.genes.OO_LO$pvalue < 0.05 & !is.na(de.genes.OO_LO$pvalue)]
+
+# select relevant sample columns for the given pairwise comparison
+colnames(counts.transformed.vst)
+counts_de <- counts.transformed.vst[,c(10:21)]
+
+counts_de <- counts_de[rownames(counts.transformed.vst) %in% sigChanges,]
+
+dim(counts_de)
+```
+
+```{r}
+# save plot
+#pdf("Past_Sym_PCA_OO_LO_subset.pdf")
+
+pcadata = DESeq2::plotPCA(counts_de, intgroup = c("group"), returnData = TRUE)
+percentVar = round(100 * attr(pcadata, "percentVar"))
+pca = prcomp(t(assay(counts_de)), center = TRUE, scale. = FALSE)
+
+plot <- DESeq2::plotPCA(counts_de, returnData = TRUE, intgroup = c("group")) %>% 
+      ggplot(aes(x = PC1, y = PC2)) +
+      geom_point(aes(color = group), size = 1.3) +
+      stat_ellipse(geom = "polygon", alpha = 1/10, aes(fill = group)) +
+      scale_color_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) + #chosen.palette
+      scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
+      xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+      ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+      labs(title = "Ojo-Ojo vs. Lagoon-Ojo (380 genes)") +
+      labs(color = "Origin.Destination", fill = "Origin.Destination") +
+      theme_cowplot() 
+
+plot 
+
+#dev.off()
+```
+
+check
+```{r}
+dim(counts_de)
+dim(de.genes.OO_LO)
+colnames(counts_de)
+```
+
+
+
+##############################################################################
+
+# PERMANOVA
+
+### transpose gene table
+```{r}
+norm.genes.t <- data.table::transpose(norm.genes, keep.names = "rn") 
+
+rownames(norm.genes.t) <- norm.genes.t[,1]
+
+norm.genes.t <- norm.genes.t[,-1]
+
+dim(norm.genes.t)
+```
+
+
+### Make distance matrix
+```{r}
+dist_overall <- vegdist(norm.genes.t, method="bray") 
+```
+
+
+## PERMANOVA - Total gene expression (normalized)
+```{r}
+permanova_overall.interaction <- adonis(dist_overall ~ Origin_type + Destination_type + Origin_type*Destination_type, data = meta, permutations=9999, na.rm = TRUE)
+permanova_overall.interaction
+```
+
+
+(Alternate) 
+Make distance matrix and run PERMANOVA together in *one function*
+adonis(norm.genes.t ~ group, data = meta, method = "bray", permutations=9999, na.rm = TRUE)
+
+
+
+##############################################################################
+
+## Pairwise PERMANOVA
+
+This is a wrapper function for multilevel pairwise comparison using adonis() from package 'vegan'. 
+The function returns adjusted p-values using p.adjust(), default is 'bonferroni'.
+- 'arg' should be one of “holm”, “hochberg”, “hommel”, “bonferroni”, “BH”, “BY”, “fdr”, “none”
+
+## Pairwise PERMANOVA - Origin
+```{r}
+pairwise.adonis(dist_overall, factors = meta$Origin_type,  p.adjust.m = 'fdr', perm = 9999)
+# sim.function = 'vegdist' (default)
+# sim.method = 'bray' (default)
+## calculate the similarity matrix. Ignored if x is a distance matrix)
+```
+
+
+## Pairwise PERMANOVA - Destination
+```{r}
+pairwise.adonis(dist_overall, factors = meta$Destination_type,  p.adjust.m = 'fdr', perm = 9999)
+# sim.function = 'vegdist' (default)
+# sim.method = 'bray' (default)
+## calculate the similarity matrix. Ignored if x is a distance matrix)
+```
+
+
+## Pairwise PERMANOVA - Group
+```{r}
+pairwise.adonis(dist_overall, factors = meta$group,  p.adjust.m = 'fdr', perm = 9999)
+# sim.function = 'vegdist' (default)
+# sim.method = 'bray' (default)
+## calculate the similarity matrix. Ignored if x is a distance matrix)
+```
+
+**pairwise.adonis() does not accept interaction between factors neither strata.**
+
+
+
+# pairwise.adonis2()
+
+This function accepts strata
+
+NOTE: This is still a developing version -- results using interactions may not be right. Please validate. I would appreciate feed back.
+
+update 28 April 2020: Function now adapts the permutation matrix for each combination of factors before applying adonis. The p-value when using strata (block) looks correct now. Check syntax in example below.
+
+This function accepts a model formula like in adonis from vegan. You can use interactions between factors and define strata to constrain permutations. For pairwise comparison a list of unique pairwise combination of factors is produced. Then for each pair, following objects are reduced accordingly to include only the subset of cases belonging to the pair:
+
+    the left hand side of the formula (dissimilarity matrix or community matrix)
+
+    the right hand side of the formula (factors)
+
+    the strata if used.
+
+The reduced data are passed to adonis and the summary of the anova table for each pair is saved in a list, together with the anova table of the full model and the original 'parent call'.
+
+https://github.com/pmartinezarbizu/pairwiseAdonis
+
+```{r}
+pairwise.adonis2(dist_overall ~ Origin_type * Destination_type, data = meta, perm = 9999)
+```
+
+
+### Session Info
+```{r}
+sessionInfo()
+```
+
+
+
