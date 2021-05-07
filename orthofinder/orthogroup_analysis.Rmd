@@ -15,7 +15,6 @@ library(SummarizedExperiment)
 library(cowplot)
 ```
 
-
 ### Set working directory
 ```{r}
 setwd("~/Documents/Rprojects/postdoc\ Rprojects/ODU_postdoc_Rprojects/Paper_Ojo_gene-expression/Porites_astreoides/orthofinder/")
@@ -45,7 +44,7 @@ ppor_seq2iso <- ppor_seq2iso %>%
 head(ppor_seq2iso)
 ```
 
-Same transcriptome reference, just used different suffixes for mapping of the different species
+Same transcriptome reference, just used different suffixes for counts of the different species
 ```{r}
 seq2iso <- cbind(past_seq2iso, ppor_seq2iso)
 head(seq2iso)
@@ -145,7 +144,7 @@ orthoSize <- apply(ortho.split,2,sapply,length)
 orthoSize <- orthoSize[, 2:3]
 ```
 
-
+For example,
 check the number of in-paralogs in each species in orthogroup OG0000018:
 ```{r}
 orthoSize["N0.HOG0000021", ]
@@ -446,9 +445,11 @@ past_multi.isogroups_OO_OC <- multi.ortho.Past.isotigs %>%
 dim(past_multi.isogroups_OO_OC)
 ```
 
+
 ```{r}
 head(past_multi.isogroups_OO_OC)
 ```
+
 
 **orthogroups that are counted more than once in the DEG results table**
 ```{r}
@@ -485,7 +486,14 @@ past_1.to.1.isogroups_OO_OC %>% dplyr::count(orthogroup) %>% filter(n > 1)
 No shared response.
 
 
-### Make contrast-specific orthogroup dataframe
+## Make contrast-specific orthogroup dataframe
+
+### Merge multi orthogroup with 1:1 orthogroup
+
+**full join**
+    - return all rows and columns from the left and right data set
+    - unmatched rows from either left data sets receive NA values in the associated new columns
+
 ```{r}
 multi.isogroups_OO_OC <- past_multi.isogroups_OO_OC[, 1:3]
 
@@ -493,31 +501,13 @@ multi.isogroups_OO_OC <- multi.isogroups_OO_OC %>%
   inner_join(multi.ortho.Sid, by = "orthogroup") %>% 
   dplyr::rename(gene.Past = gene.x, gene.Sid = gene.y)
 
-head(multi.isogroups_OO_OC)
-```
+past_1.to.1.isogroups_OO_OC <- past_1.to.1.isogroups_OO_OC[,1:4]
 
-```{r}
-orthogroups.OO_OC <- past_1.to.1.isogroups_OO_OC[, 1:4]
-
-orthogroups.OO_OC <- orthogroups.OO_OC %>% 
+past_1.to.1.isogroups_OO_OC <- past_1.to.1.isogroups_OO_OC %>% 
   dplyr::rename(gene.Past = gene, gene.Sid = gene_Sid)
 
-head(orthogroups.OO_OC)
-```
+orthogroups.OO_OC <- full_join(multi.isogroups_OO_OC, past_1.to.1.isogroups_OO_OC, by = c("isotig", "gene.Past", "orthogroup", "gene.Sid"))
 
-### merge multi orthogroup with 1:1 orthogroup
-
-**full join**
-    - return all rows and columns from the left and right data set
-    - unmatched rows from either left data sets receive NA values in the associated new columns
-
-```{r}
-orthogroups.OO_OC <- full_join(orthogroups.OO_OC, multi.isogroups_OO_OC, by = c("orthogroup", "gene.Past", "gene.Sid", "isotig"))
-
-dim(orthogroups.OO_OC)
-```
-
-```{r}
 head(orthogroups.OO_OC)
 ```
 
@@ -529,9 +519,6 @@ length(intersect(multi.ortho.Past.isotigs$gene, orthogroups.OO_OC$gene.Past))
 ```{r}
 length(intersect(multi.ortho.Sid$orthogroup, orthogroups.OO_OC$orthogroup))
 ```
-
-86 + 35 = 121
-
 
 ```{r}
 length(intersect(past_multi.isogroups_OO_OC$orthogroup, orthogroups.OO_OC$orthogroup))
@@ -569,7 +556,7 @@ plot <- DESeq2::plotPCA(counts_de, returnData = TRUE, intgroup = c("group")) %>%
       scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
       xlab(paste0("PC1: ",percentVar[1],"% variance")) +
       ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-      labs(title = "Ojo-Ojo vs. Ojo-Control (orthogroups)") +
+      labs(title = "Ojo-Ojo vs. Ojo-Control (82 orthogroups)") +
       labs(color = "Origin.Destination", fill = "Origin.Destination") +
       theme_cowplot()
 
@@ -603,7 +590,7 @@ plot <- DESeq2::plotPCA(counts_de, returnData = TRUE, intgroup = c("group")) %>%
       scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
       xlab(paste0("PC1: ",percentVar[1],"% variance")) +
       ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-      labs(title = "Ojo-Ojo vs. Ojo-Control (orthogroups)") +
+      labs(title = "Ojo-Ojo vs. Ojo-Control (82 orthogroups)") +
       labs(color = "Origin.Destination", fill = "Origin.Destination") +
       theme_cowplot()
 
@@ -644,7 +631,7 @@ plot <- DESeq2::plotPCA(counts_de, returnData = TRUE, intgroup = c("group")) %>%
       scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
       xlab(paste0("PC1: ",percentVar[1],"% variance")) +
       ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-      labs(title = "Ojo-Ojo vs. Ojo-Control (orthogroups)") +
+      labs(title = "Ojo-Ojo vs. Ojo-Control (86 orthogroups)") +
       labs(color = "Origin.Destination", fill = "Origin.Destination") +
       theme_cowplot()
 
@@ -678,7 +665,7 @@ plot <- DESeq2::plotPCA(counts_de, returnData = TRUE, intgroup = c("group")) %>%
       scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
       xlab(paste0("PC1: ",percentVar[1],"% variance")) +
       ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-      labs(title = "Ojo-Ojo vs. Ojo-Control (orthogroups)") +
+      labs(title = "Ojo-Ojo vs. Ojo-Control (86 orthogroups)") +
       labs(color = "Origin.Destination", fill = "Origin.Destination") +
       theme_cowplot()
 
@@ -877,7 +864,7 @@ plot <- DESeq2::plotPCA(counts_de, returnData = TRUE, intgroup = c("group")) %>%
       scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
       xlab(paste0("PC1: ",percentVar[1],"% variance")) +
       ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-      labs(title = "Ojo-Ojo vs. Lagoon-Ojo (orthogroups)") +
+      labs(title = "Ojo-Ojo vs. Lagoon-Ojo (6 orthogroups)") +
       labs(color = "Origin.Destination", fill = "Origin.Destination") +
       theme_cowplot()
 
@@ -889,7 +876,7 @@ plot
 ```{r}
 # select relevant sample columns for the given pairwise comparison
 colnames(Sid.counts.transformed.vst)
-counts_de <- Sid.counts.transformed.vst[,c(2,4,6,9,13,15,17,19,21,22)]
+counts_de <- Sid.counts.transformed.vst[,c(2,4,6,9,11,13,15,17,19,21,22)]
 counts_de <- counts_de[rownames(counts_de) %in% sigChanges,]
 dim(counts_de)
 ```
@@ -911,7 +898,7 @@ plot <- DESeq2::plotPCA(counts_de, returnData = TRUE, intgroup = c("group")) %>%
       scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
       xlab(paste0("PC1: ",percentVar[1],"% variance")) +
       ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-      labs(title = "Ojo-Ojo vs. Lagoon-Ojo (orthogroups)") +
+      labs(title = "Ojo-Ojo vs. Lagoon-Ojo (6 orthogroups)") +
       labs(color = "Origin.Destination", fill = "Origin.Destination") +
       theme_cowplot()
 
@@ -951,7 +938,7 @@ plot <- DESeq2::plotPCA(counts_de, returnData = TRUE, intgroup = c("group")) %>%
       scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
       xlab(paste0("PC1: ",percentVar[1],"% variance")) +
       ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-      labs(title = "Ojo-Ojo vs. Lagoon-Ojo (orthogroups)") +
+      labs(title = "Ojo-Ojo vs. Lagoon-Ojo (7 orthogroups)") +
       labs(color = "Origin.Destination", fill = "Origin.Destination") +
       theme_cowplot()
 
@@ -963,7 +950,7 @@ plot
 ```{r}
 # select relevant sample columns for the given pairwise comparison
 colnames(Past.counts.transformed.vst)
-counts_de <- Past.counts.transformed.vst[,c(2,4,6,9,13,15,17,19,21,22)]
+counts_de <- Past.counts.transformed.vst[,c(10:21)]
 counts_de <- counts_de[rownames(counts_de) %in% sigChanges,]
 dim(counts_de)
 ```
@@ -985,7 +972,7 @@ plot <- DESeq2::plotPCA(counts_de, returnData = TRUE, intgroup = c("group")) %>%
       scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
       xlab(paste0("PC1: ",percentVar[1],"% variance")) +
       ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-      labs(title = "Ojo-Ojo vs. Lagoon-Ojo (orthogroups)") +
+      labs(title = "Ojo-Ojo vs. Lagoon-Ojo (7 orthogroups)") +
       labs(color = "Origin.Destination", fill = "Origin.Destination") +
       theme_cowplot()
 
@@ -1330,7 +1317,7 @@ plot <- DESeq2::plotPCA(counts_de, returnData = TRUE, intgroup = c("group")) %>%
       scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
       xlab(paste0("PC1: ",percentVar[1],"% variance")) +
       ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-      labs(title = "Reef-Ojo vs. Reef-Control (orthogroups)") +
+      labs(title = "Reef-Ojo vs. Reef-Control (180 orthogroups)") +
       labs(color = "Origin.Destination", fill = "Origin.Destination") +
       theme_cowplot()
 
@@ -1342,7 +1329,7 @@ plot
 ```{r}
 # select relevant sample columns for the given pairwise comparison
 colnames(Sid.counts.transformed.vst)
-counts_de <- Sid.counts.transformed.vst[,c(23:29)]
+counts_de <- Sid.counts.transformed.vst[,c(23:37)]
 counts_de <- counts_de[rownames(counts_de) %in% sigChanges,]
 dim(counts_de)
 ```
@@ -1364,7 +1351,7 @@ plot <- DESeq2::plotPCA(counts_de, returnData = TRUE, intgroup = c("group")) %>%
       scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
       xlab(paste0("PC1: ",percentVar[1],"% variance")) +
       ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-      labs(title = "Reef-Ojo vs. Reef-Control (orthogroups)") +
+      labs(title = "Reef-Ojo vs. Reef-Control (180 orthogroups)") +
       labs(color = "Origin.Destination", fill = "Origin.Destination") +
       theme_cowplot()
 
@@ -1404,7 +1391,7 @@ plot <- DESeq2::plotPCA(counts_de, returnData = TRUE, intgroup = c("group")) %>%
       scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
       xlab(paste0("PC1: ",percentVar[1],"% variance")) +
       ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-      labs(title = "Reef-Ojo vs. Reef-Control (orthogroups)") +
+      labs(title = "Reef-Ojo vs. Reef-Control (3 orthogroups)") +
       labs(color = "Origin.Destination", fill = "Origin.Destination") +
       theme_cowplot()
 
@@ -1437,7 +1424,7 @@ plot <- DESeq2::plotPCA(counts_de, returnData = TRUE, intgroup = c("group")) %>%
       scale_fill_manual(values = c("dodgerblue", "gold2", "#163343", "firebrick", "forestgreen", "bisque3")) +
       xlab(paste0("PC1: ",percentVar[1],"% variance")) +
       ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-      labs(title = "Reef-Ojo vs. Reef-Control (orthogroups)") +
+      labs(title = "Reef-Ojo vs. Reef-Control (3 orthogroups)") +
       labs(color = "Origin.Destination", fill = "Origin.Destination") +
       theme_cowplot()
 
