@@ -49,6 +49,14 @@ de.genes_LO_LC$expression <- as.factor(de.genes_LO_LC$expression)
 dim(de.genes_LO_LC)
 ```
 
+```{r}
+LO_LC.up <- subset(de.genes_LO_LC, expression == "up")
+dim(LO_LC.up)
+
+LO_LC.down <- subset(de.genes_LO_LC, expression == "down")
+dim(LO_LC.down)
+```
+
 
 ## Ojo-Ojo vs. Lagoon-Ojo
 
@@ -63,6 +71,15 @@ de.genes_OO_LO$expression <- as.factor(de.genes_OO_LO$expression)
 dim(de.genes_OO_LO)
 ```
 
+```{r}
+OO_LO.up <- subset(de.genes_OO_LO, expression == "up")
+dim(OO_LO.up)
+
+OO_LO.down <- subset(de.genes_OO_LO, expression == "down")
+dim(OO_LO.down)
+```
+
+
 ## Ojo-Ojo vs. Ojo-Control
 
 ```{r}
@@ -76,6 +93,15 @@ de.genes_OO_OC$expression <- as.factor(de.genes_OO_OC$expression)
 dim(de.genes_OO_OC)
 ```
 
+```{r}
+OO_OC.up <- subset(de.genes_OO_OC, expression == "up")
+dim(OO_OC.up)
+
+OO_OC.down <- subset(de.genes_OO_OC, expression == "down")
+dim(OO_OC.down)
+```
+
+
 ## Ojo-Control vs. Lagoon-Control
 
 ```{r}
@@ -87,6 +113,14 @@ de.genes_OC_LC$group <- as.factor(de.genes_OC_LC$group)
 de.genes_OC_LC$expression <- ifelse(de.genes_OC_LC$log2FoldChange>0, 'up', 'down')
 de.genes_OC_LC$expression <- as.factor(de.genes_OC_LC$expression)
 dim(de.genes_OC_LC)
+```
+
+```{r}
+OC_LC.up <- subset(de.genes_OC_LC, expression == "up")
+dim(OC_LC.up)
+
+OC_LC.down <- subset(de.genes_OC_LC, expression == "down")
+dim(OC_LC.down)
 ```
 
 
@@ -115,6 +149,107 @@ venn.diagram(x = list(de.genes_LO_LC$gene, de.genes_OO_LO$gene, de.genes_OO_OC$g
 
 #cat.pos = c(0, 0),
 ```
+
+## Upregulated
+```{r}
+venn.diagram(x = list(LO_LC.up$gene, OO_LO.up$gene, OO_OC.up$gene, OC_LC.up$gene), 
+             category.names = c("Lagoon-Ojo vs Lagoon-Control", "Ojo-Ojo vs Lagoon-Ojo", "Ojo-Ojo vs Ojo-Control", "Ojo-Control vs Lagoon-Control"),
+         filename = 'Past_Host_venn_up_labels.png',
+        output = TRUE,
+        imagetype="png",
+        height = 2500, 
+        width = 6000, 
+        resolution = 300,
+        fill=c("cadetblue2", "darkseagreen2", "coral1", "deeppink3"), #, "goldenrod"
+        main.cex = 1.5,
+        sub.cex = 1.5,
+        cat.cex = 1.5,
+        cex = 1.5,
+        cat.default.pos = "outer",
+        #cat.pos = c(-27, 27, 135, 135, 27),
+        #cat.dist = c(0.055, 0.055, 0.055, 0.055, 0.055),
+        main = "",
+        scaled = FALSE)
+
+#cat.pos = c(0, 0),
+```
+
+
+## Upregulated - without labels
+```{r}
+venn.diagram(x = list(LO_LC.up$gene, OO_LO.up$gene, OO_OC.up$gene, OC_LC.up$gene), 
+             category.names = c("", "", "", ""),
+         filename = 'Past_Host_venn_up.png',
+        output = TRUE,
+        imagetype="png",
+        height = 2500, 
+        width = 6000, 
+        resolution = 300,
+        fill=c("cadetblue2", "darkseagreen2", "coral1", "deeppink3"), #, "goldenrod"
+        main.cex = 1.5,
+        sub.cex = 1.5,
+        cat.cex = 1.5,
+        cex = 1.5,
+        cat.default.pos = "outer",
+        #cat.pos = c(-27, 27, 135, 135, 27),
+        #cat.dist = c(0.055, 0.055, 0.055, 0.055, 0.055),
+        main = "",
+        scaled = FALSE)
+
+#cat.pos = c(0, 0),
+```
+
+
+## Downregulated - 3-way because one contrast has zero downregulated DEG
+### With labels
+```{r}
+venn.diagram(x = list(LO_LC.down$gene, OO_LO.down$gene, OO_OC.down$gene), 
+             category.names = c("Lagoon-Ojo vs Lagoon-Control", "Ojo-Ojo vs Lagoon-Ojo", "Ojo-Ojo vs Ojo-Control"),
+         filename = 'Past_Host_venn_down_labels.png',
+        output = TRUE,
+        imagetype="png",
+        height = 2500, 
+        width = 6000, 
+        resolution = 300,
+        fill=c("cadetblue2", "darkseagreen2", "coral1"), #, "goldenrod"
+        main.cex = 1.5,
+        sub.cex = 1.5,
+        cat.cex = 1.5,
+        cex = 1.5,
+        cat.default.pos = "outer",
+        #cat.pos = c(-27, 27, 135, 135, 27),
+        #cat.dist = c(0.055, 0.055, 0.055, 0.055, 0.055),
+        main = "",
+        scaled = FALSE)
+
+#cat.pos = c(0, 0),
+```
+
+
+## Downregulated - 3-way because one contrast has zero downregulated DEG
+```{r}
+venn.diagram(x = list(LO_LC.down$gene, OO_LO.down$gene, OO_OC.down$gene), 
+             category.names = c("", "", ""),
+         filename = 'Past_Host_venn_down.png',
+        output = TRUE,
+        imagetype="png",
+        height = 2500, 
+        width = 6000, 
+        resolution = 300,
+        fill=c("cadetblue2", "darkseagreen2", "coral1"), #, "goldenrod"
+        main.cex = 1.5,
+        sub.cex = 1.5,
+        cat.cex = 1.5,
+        cex = 1.5,
+        cat.default.pos = "outer",
+        #cat.pos = c(-27, 27, 135, 135, 27),
+        #cat.dist = c(0.055, 0.055, 0.055, 0.055, 0.055),
+        main = "",
+        scaled = FALSE)
+
+#cat.pos = c(0, 0),
+```
+
 
 # All DEG - 3-way venn comparing Control and Ojo destination pairwise contrasts
 ```{r}

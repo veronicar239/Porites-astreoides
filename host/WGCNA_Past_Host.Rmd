@@ -220,9 +220,9 @@ anyNA(traits)
 
 traits - Remove samples for which all 4 traits are NA]
 ```{r}
-ind <- apply(traits[,1:4], 1, function(traits) all(is.na(traits)))
-traits <- traits[ !ind, ]
-dim(traits)
+# ind <- apply(traits[,1:4], 1, function(traits) all(is.na(traits)))
+# traits <- traits[ !ind, ]
+# dim(traits) # 26  5
 ```
 
 
@@ -248,11 +248,11 @@ dim(dat)
 
 dat - Remove samples for which all 4 traits are NA
 ```{r}
-drop <- c("NO_265_La_Pa_yr2", "NO_274_La_Pa_yr2", "NO_280_La_Pa_yr2")
-
-dat <- dat[!(row.names(dat) %in% drop),]
-dat <- droplevels(dat)
-dim(dat)
+# drop <- c("NO_265_La_Pa_yr2", "NO_274_La_Pa_yr2", "NO_280_La_Pa_yr2")
+# 
+# dat <- dat[!(row.names(dat) %in% drop),]
+# dat <- droplevels(dat)
+# dim(dat) # 26 8118
 ```
 
 
@@ -311,21 +311,21 @@ plot(sampleTree2, main = "P. astreoides - colonyID_sampleID", sub="", xlab="", c
 
 ## Remove outlier
 ```{r}
-drop <- c("NO_268_La_Pa_yr2")
-
-meta <- meta[!(row.names(meta) %in% drop),]
-traits <- traits[!(row.names(traits) %in% drop),]
-dat <- dat[!(row.names(dat) %in% drop),]
-
-# drop factor levels
-traits[] <- lapply(traits, function(x) if(is.factor(x)) factor(x) else x)
-
-meta <- droplevels(meta)
-traits <- droplevels(traits)
-dat <- droplevels(dat)
-
-dim(traits)
-dim(dat)
+# drop <- c("NO_268_La_Pa_yr2")
+# 
+# meta <- meta[!(row.names(meta) %in% drop),]
+# traits <- traits[!(row.names(traits) %in% drop),]
+# dat <- dat[!(row.names(dat) %in% drop),]
+# 
+# # drop factor levels
+# traits[] <- lapply(traits, function(x) if(is.factor(x)) factor(x) else x)
+# 
+# meta <- droplevels(meta)
+# traits <- droplevels(traits)
+# dat <- droplevels(dat)
+# 
+# dim(traits)
+# dim(dat)
 ```
 
 ```{r}
@@ -334,20 +334,16 @@ table(rownames(traits)==rownames(dat))
 ```
 
 ```{r}
-genomic_idx <- match(rownames(traits), rownames(dat))
-
-# create a new data matrix in which columns are re-ordered based on the match indices:
-
-dat_ordered  <- dat[genomic_idx,]
-dat <- dat_ordered
-all(rownames(traits) == rownames(dat))
+# genomic_idx <- match(rownames(traits), rownames(dat))
+# 
+# # create a new data matrix in which columns are re-ordered based on the match indices:
+# 
+# dat_ordered  <- dat[genomic_idx,]
+# dat <- dat_ordered
+# all(rownames(traits) == rownames(dat))
 ```
 
 
-```{r}
-table(rownames(traits)==rownames(dat)) 
-# should return TRUE if datasets align correctly, otherwise your names are out of order
-```
 
 ## Dendrogram - by sample ID
 ```{r}
@@ -497,11 +493,12 @@ Moved to R for this specific chunk
 # dat <- dat_t
 # dim(dat)
 #### 29 8118
-# drop <- c("NC_292_La_Pa_yr2", "NC_320_La_Pa_yr2", "NC_311_La_Pa_yr2", "NO_265_La_Pa_yr2", "NO_274_La_Pa_yr2", "NO_280_La_Pa_yr2", "NO_268_La_Pa_yr2")
+# drop <- c("NC_292_La_Pa_yr2", "NC_320_La_Pa_yr2", "NC_311_La_Pa_yr2")
+### Not necessary , "NO_265_La_Pa_yr2", "NO_274_La_Pa_yr2", "NO_280_La_Pa_yr2", "NO_268_La_Pa_yr2"
 # dat <- dat[!(row.names(dat) %in% drop),]
 # dat <- droplevels(dat)
 # dim(dat)
-#### 25 8118
+#### 29 8118
 ## Choose a set of soft-thresholding powers
   # powers = c(seq(4,10,by=1), seq(12,20, by=2))
 
@@ -515,19 +512,19 @@ pickSoftThreshold: will use block size 5511.
  pickSoftThreshold: calculating connectivity for given powers...
    ..working on genes 1 through 5511 of 8118
    ..working on genes 5512 through 8118 of 8118
-   Power SFT.R.sq  slope truncated.R.sq mean.k. median.k. max.k.
-1      4  0.00343 -0.449          0.974  735.00    723.00 1100.0
-2      5  0.05510 -1.450          0.963  447.00    437.00  751.0
-3      6  0.15700 -2.030          0.965  281.00    273.00  527.0
-4      7  0.26700 -2.280          0.967  181.00    175.00  378.0
-5      8  0.39500 -2.500          0.975  120.00    114.00  279.0
-6      9  0.51400 -2.700          0.984   81.10     76.50  209.0
-7     10  0.60600 -2.820          0.990   55.90     52.00  159.0
-8     12  0.72700 -2.910          0.996   27.90     25.20   95.4
-9     14  0.77600 -2.800          0.997   14.80     12.90   59.6
-10    16  0.81900 -2.670          0.996    8.27      6.88   38.6
-11    18  0.85400 -2.570          0.997    4.81      3.83   25.7
-12    20  0.87700 -2.660          0.998    2.90      2.21   18.9
+   Power SFT.R.sq   slope truncated.R.sq mean.k. median.k. max.k.
+1      4 0.211000  0.4560          0.523  1840.0    1910.0   3280
+2      5 0.000664  0.0237          0.567  1370.0    1390.0   2740
+3      6 0.089800 -0.2960          0.690  1040.0    1030.0   2310
+4      7 0.244000 -0.5260          0.804   798.0     774.0   1970
+5      8 0.373000 -0.7400          0.853   622.0     586.0   1690
+6      9 0.481000 -0.8980          0.895   492.0     449.0   1460
+7     10 0.569000 -1.0200          0.927   393.0     346.0   1270
+8     12 0.678000 -1.2300          0.951   258.0     210.0    981
+9     14 0.729000 -1.3800          0.955   176.0     131.0    776
+10    16 0.767000 -1.5100          0.960   123.0      84.0    624
+11    18 0.807000 -1.5800          0.969    87.9      54.8    509
+12    20 0.826000 -1.6500          0.969    64.3      36.6    420
 
 
 ```{r}
@@ -706,12 +703,12 @@ plotDendroAndColors(geneTree, cbind(dynamicColors, mergedColors), c("Dynamic Hyb
 
 ```{r}
 # set a threshold for merging modules
-dynamicMergeCut(25) # calculates the threshold for module merging using the number of samples
+dynamicMergeCut(29) # calculates the threshold for module merging using the number of samples
 ```
 
 
 ```{r}
-MEDissThres = 0.2507698
+MEDissThres = 0.2336816
 # Plot the cut line into the dendrogram
 sizeGrWindow(12, 9)
 plot(METree, main = "Clustering of module eigengenes",
@@ -928,50 +925,50 @@ save information about module genes
 ```{r}
 #green <- as.data.frame(names(dat)[moduleColors_merged == "green"])
 
-cyan <- names(dat)[moduleColors_merged == "cyan"]
-cyan <- as.data.frame(cyan)
-names(cyan)[names(cyan) == "cyan"] <- "gene"
-cyan$module <- "cyan"
+pink <- names(dat)[moduleColors_merged == "pink"]
+pink <- as.data.frame(pink)
+names(pink)[names(pink) == "pink"] <- "gene"
+pink$module <- "pink"
+
+lightcyan <- names(dat)[moduleColors_merged == "lightcyan"]
+lightcyan <- as.data.frame(lightcyan)
+names(lightcyan)[names(lightcyan) == "lightcyan"] <- "gene"
+lightcyan$module <- "lightcyan"
 
 midnightblue <- names(dat)[moduleColors_merged == "midnightblue"]
 midnightblue <- as.data.frame(midnightblue)
 names(midnightblue)[names(midnightblue) == "midnightblue"] <- "gene"
 midnightblue$module <- "midnightblue"
 
-tan <- names(dat)[moduleColors_merged == "tan"]
-tan <- as.data.frame(tan)
-names(tan)[names(tan) == "tan"] <- "gene"
-tan$module <- "tan"
+# tan <- names(dat)[moduleColors_merged == "tan"]
+# tan <- as.data.frame(tan)
+# names(tan)[names(tan) == "tan"] <- "gene"
+# tan$module <- "tan"
 
 green <- names(dat)[moduleColors_merged == "green"]
 green <- as.data.frame(green)
 names(green)[names(green) == "green"] <- "gene"
 green$module <- "green"
 
-brown <- names(dat)[moduleColors_merged == "brown"]
-brown <- as.data.frame(brown)
-names(brown)[names(brown) == "brown"] <- "gene"
-brown$module <- "brown"
-
-red <- names(dat)[moduleColors_merged == "red"]
-red <- as.data.frame(red)
-names(red)[names(red) == "red"] <- "gene"
-red$module <- "red"
-
-salmon <- names(dat)[moduleColors_merged == "salmon"]
-salmon <- as.data.frame(salmon)
-names(salmon)[names(salmon) == "salmon"] <- "gene"
-salmon$module <- "salmon"
+# brown <- names(dat)[moduleColors_merged == "brown"]
+# brown <- as.data.frame(brown)
+# names(brown)[names(brown) == "brown"] <- "gene"
+# brown$module <- "brown"
+# 
+# red <- names(dat)[moduleColors_merged == "red"]
+# red <- as.data.frame(red)
+# names(red)[names(red) == "red"] <- "gene"
+# red$module <- "red"
+# 
+# salmon <- names(dat)[moduleColors_merged == "salmon"]
+# salmon <- as.data.frame(salmon)
+# names(salmon)[names(salmon) == "salmon"] <- "gene"
+# salmon$module <- "salmon"
 
 blue <- names(dat)[moduleColors_merged == "blue"]
 blue <- as.data.frame(blue)
 names(blue)[names(blue) == "blue"] <- "gene"
 blue$module <- "blue"
-
-lightcyan <- names(dat)[moduleColors_merged == "lightcyan"]
-lightcyan <- as.data.frame(lightcyan)
-names(lightcyan)[names(lightcyan) == "lightcyan"] <- "gene"
-lightcyan$module <- "lightcyan"
 
 greenyellow <- names(dat)[moduleColors_merged == "greenyellow"]
 greenyellow <- as.data.frame(greenyellow)
@@ -998,7 +995,7 @@ purple <- as.data.frame(purple)
 names(purple)[names(purple) == "purple"] <- "gene"
 purple$module <- "purple"
 
-summary <- rbind(cyan, midnightblue, tan, green, brown, red, salmon, blue, lightcyan, greenyellow, magenta, yellow, black, purple)
+summary <- rbind(pink, lightcyan, midnightblue, green, blue, greenyellow, magenta, yellow, black, purple)
 
 write.csv(file = "Past_Host_WGCNA_module_genes.csv", x = summary)
 ```

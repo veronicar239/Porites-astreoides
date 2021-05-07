@@ -1,0 +1,23 @@
+Y
+devtools::install_github("gavinsimpson/ggvegan")
+install.packages("modeest")
+library(SummarizedExperiment)
+library(DESeq2)
+library(WGCNA)
+options(stringsAsFactors=FALSE)
+enableWGCNAThreads()
+setwd("~/Documents/Rprojects/postdoc\ Rprojects/ODU_postdoc_Rprojects/Paper_Ojo_gene-expression/Porites_astreoides/host/")
+counts.transformed.vst <- readRDS(file = "counts_vst.BlindFalse_Past_Host.rds")
+dat = as.data.frame(assay(counts.transformed.vst))
+dat_t <- data.table::transpose(dat)
+colnames(dat_t) <- rownames(dat)
+rownames(dat_t) <- colnames(dat)
+dat <- dat_t
+dim(dat)
+drop <- c("NC_292_La_Pa_yr2", "NC_320_La_Pa_yr2", "NC_311_La_Pa_yr2")
+dat <- dat[!(row.names(dat) %in% drop),]
+dat <- droplevels(dat)
+dim(dat)
+powers = c(seq(4,10,by=1), seq(12,20, by=2))
+sft = pickSoftThreshold(dat, dataIsExpr = TRUE, powerVector = powers, networkType = "signed", verbose = 2)
+saveRDS(sft, file = "Past_Host_SoftThreshold.rds")
