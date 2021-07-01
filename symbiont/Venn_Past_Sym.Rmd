@@ -1,0 +1,266 @@
+---
+title: "Venn_Past_Sym"
+author: "Veronica Radice"
+date: "28/06/2021"
+output: html_document
+---
+
+
+# Venn diagrams
+## Differentially expressed genes
+
+## Symbionts
+## *Porites astreoides*
+
+
+### Load packages
+```{r setup, include=FALSE}
+library(VennDiagram)
+```
+
+### Set working directory
+```{r}
+setwd("~/Documents/Rprojects/postdoc\ Rprojects/ODU_postdoc_Rprojects/Paper_Ojo_gene-expression/Porites_astreoides/symbiont/")
+```
+
+
+# Import data
+
+
+## Effect of Origin - corals transplanted to same Destination
+
+Absolute number of DEG adjusted p-value < 0.1
+
+## Lagoon-Ojo vs. Lagoon-Control
+
+```{r}
+de.genes_LO_LC <- readRDS("Past_sym_DE_genes_LO_LC_padj.1.rds")
+de.genes_LO_LC <- as.data.frame(de.genes_LO_LC)
+de.genes_LO_LC$group <- 'LO_LC'
+de.genes_LO_LC$group <- as.factor(de.genes_LO_LC$group)
+
+de.genes_LO_LC$expression <- ifelse(de.genes_LO_LC$log2FoldChange>0, 'up', 'down')
+de.genes_LO_LC$expression <- as.factor(de.genes_LO_LC$expression)
+dim(de.genes_LO_LC)
+```
+
+```{r}
+LO_LC.up <- subset(de.genes_LO_LC, expression == "up")
+dim(LO_LC.up)
+
+LO_LC.down <- subset(de.genes_LO_LC, expression == "down")
+dim(LO_LC.down)
+```
+
+
+## Ojo-Ojo vs. Lagoon-Ojo
+
+```{r}
+de.genes_OO_LO <- readRDS("Past_sym_DE_genes_OO_LO_padj.1.rds")
+de.genes_OO_LO <- as.data.frame(de.genes_OO_LO)
+de.genes_OO_LO$group <- 'OO_LO'
+de.genes_OO_LO$group <- as.factor(de.genes_OO_LO$group)
+
+de.genes_OO_LO$expression <- ifelse(de.genes_OO_LO$log2FoldChange>0, 'up', 'down')
+de.genes_OO_LO$expression <- as.factor(de.genes_OO_LO$expression)
+dim(de.genes_OO_LO)
+```
+
+```{r}
+OO_LO.up <- subset(de.genes_OO_LO, expression == "up")
+dim(OO_LO.up)
+
+OO_LO.down <- subset(de.genes_OO_LO, expression == "down")
+dim(OO_LO.down)
+```
+
+
+## Ojo-Ojo vs. Ojo-Control
+
+```{r}
+de.genes_OO_OC <- readRDS("Past_sym_DE_genes_OO_OC_padj.1.rds")
+de.genes_OO_OC <- as.data.frame(de.genes_OO_OC)
+de.genes_OO_OC$group <- 'OO_OC'
+de.genes_OO_OC$group <- as.factor(de.genes_OO_OC$group)
+
+de.genes_OO_OC$expression <- ifelse(de.genes_OO_OC$log2FoldChange>0, 'up', 'down')
+de.genes_OO_OC$expression <- as.factor(de.genes_OO_OC$expression)
+dim(de.genes_OO_OC)
+```
+
+```{r}
+OO_OC.up <- subset(de.genes_OO_OC, expression == "up")
+dim(OO_OC.up)
+
+OO_OC.down <- subset(de.genes_OO_OC, expression == "down")
+dim(OO_OC.down)
+```
+
+
+## Ojo-Control vs. Lagoon-Control
+
+*Zero differentially expressed genes*
+
+
+
+##############################################################################
+
+# All DEG - 3-way venn comparing Control and Ojo destination pairwise contrasts
+```{r}
+venn.diagram(x = list(de.genes_LO_LC$gene, de.genes_OO_LO$gene, de.genes_OO_OC$gene), 
+             category.names = c("Lagoon-Ojo vs Lagoon-Control", "Ojo-Ojo vs Lagoon-Ojo", "Ojo-Ojo vs Ojo-Control"),
+         filename = 'Past_Sym_venn.png',
+        output = TRUE,
+        imagetype="png",
+        height = 2500, 
+        width = 6000, 
+        resolution = 300,
+        fill=c("cadetblue2", "darkseagreen2", "coral1"), #, "goldenrod"
+        main.cex = 1.5,
+        sub.cex = 1.5,
+        cat.cex = 1.5,
+        cex = 1.5,
+        cat.default.pos = "outer",
+        #cat.pos = c(-27, 27, 135, 135, 27),
+        #cat.dist = c(0.055, 0.055, 0.055, 0.055, 0.055),
+        main = "Porites astreoides",
+        scaled = FALSE)
+
+#cat.pos = c(0, 0),
+```
+
+## Upregulated
+```{r}
+venn.diagram(x = list(LO_LC.up$gene, OO_LO.up$gene, OO_OC.up$gene), 
+             category.names = c("Lagoon-Ojo vs Lagoon-Control", "Ojo-Ojo vs Lagoon-Ojo", "Ojo-Ojo vs Ojo-Control"),
+         filename = 'Past_sym_venn_up_3way_labels.png',
+        output = TRUE,
+        imagetype="png",
+        height = 2500, 
+        width = 6000, 
+        resolution = 300,
+        fill=c("cadetblue2", "darkseagreen2", "coral1"), #, "goldenrod"
+        main.cex = 1.5,
+        sub.cex = 1.5,
+        cat.cex = 1.5,
+        cex = 1.5,
+        cat.default.pos = "outer",
+        #cat.pos = c(-27, 27, 135, 135, 27),
+        #cat.dist = c(0.055, 0.055, 0.055, 0.055, 0.055),
+        main = "",
+        scaled = FALSE)
+
+#cat.pos = c(0, 0),
+```
+
+
+## Upregulated - 2-way - without labels
+```{r}
+venn.diagram(x = list(OO_LO.up$gene, OO_OC.up$gene), 
+             category.names = c("", ""),
+         filename = 'Past_Host_venn_up_2way.png',
+        output = TRUE,
+        imagetype="png",
+        height = 2500, 
+        width = 6000, 
+        resolution = 300,
+        fill=c("darkseagreen2", "coral1"), #, "goldenrod"
+        main.cex = 1.5,
+        sub.cex = 1.5,
+        cat.cex = 1.5,
+        cex = 1.5,
+        cat.default.pos = "outer",
+        #cat.pos = c(-27, 27, 135, 135, 27),
+        #cat.dist = c(0.055, 0.055, 0.055, 0.055, 0.055),
+        main = "",
+        scaled = FALSE)
+
+#cat.pos = c(0, 0),
+```
+
+
+## Downregulated - 3-way because one contrast has zero downregulated DEG
+### With labels
+```{r}
+venn.diagram(x = list(LO_LC.down$gene, OO_LO.down$gene, OO_OC.down$gene), 
+             category.names = c("Lagoon-Ojo vs Lagoon-Control", "Ojo-Ojo vs Lagoon-Ojo", "Ojo-Ojo vs Ojo-Control"),
+         filename = 'Past_sym_venn_down_3way_labels.png',
+        output = TRUE,
+        imagetype="png",
+        height = 2500, 
+        width = 6000, 
+        resolution = 300,
+        fill=c("cadetblue2", "darkseagreen2", "coral1"), #, "goldenrod"
+        main.cex = 1.5,
+        sub.cex = 1.5,
+        cat.cex = 1.5,
+        cex = 1.5,
+        cat.default.pos = "outer",
+        #cat.pos = c(-27, 27, 135, 135, 27),
+        #cat.dist = c(0.055, 0.055, 0.055, 0.055, 0.055),
+        main = "",
+        scaled = FALSE)
+
+#cat.pos = c(0, 0),
+```
+
+
+## Downregulated - 2-way because one contrast has zero downregulated DEG
+```{r}
+venn.diagram(x = list(OO_LO.down$gene, OO_OC.down$gene), 
+             category.names = c("Ojo-Ojo vs Lagoon-Ojo", "Ojo-Ojo vs Ojo-Control"),
+         filename = 'Past_sym_venn_down_2-way.png',
+        output = TRUE,
+        imagetype="png",
+        height = 2500, 
+        width = 6000, 
+        resolution = 300,
+        fill=c("darkseagreen2", "coral1"), #, "goldenrod"  
+        main.cex = 1.5,
+        sub.cex = 1.5,
+        cat.cex = 1.5,
+        cex = 1.5,
+        cat.default.pos = "outer",
+        #cat.pos = c(-27, 27, 135, 135, 27),
+        #cat.dist = c(0.055, 0.055, 0.055, 0.055, 0.055),
+        main = "",
+        scaled = FALSE)
+
+#cat.pos = c(0, 0),
+```
+
+
+## Upregulated - 2-way because one contrast has zero downregulated DEG
+```{r}
+venn.diagram(x = list(OO_LO.up$gene, OO_OC.up$gene), 
+             category.names = c("", ""), #"Ojo-Ojo vs Lagoon-Ojo", "Ojo-Ojo vs Ojo-Control"
+         filename = 'Past_sym_venn_up_2-way_noLabel.png',
+        output = TRUE,
+        imagetype="png",
+        height = 2500, 
+        width = 3000, 
+        resolution = 300,
+        fill=c("darkseagreen2", "coral1"), #, "goldenrod" "darkseagreen2", 
+        main.cex = 1.5,
+        sub.cex = 1.5,
+        cat.cex = 1.5,
+        cex = 1.5,
+        cat.default.pos = "outer",
+        #cat.pos = c(-27, 27, 135, 135, 27),
+        #cat.dist = c(0.055, 0.055, 0.055, 0.055, 0.055),
+        main = "",
+        scaled = FALSE)
+
+#cat.pos = c(0, 0),
+```
+
+
+
+
+### Session Info
+```{r}
+sessionInfo()
+```
+
+
+
