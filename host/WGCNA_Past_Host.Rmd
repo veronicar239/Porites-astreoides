@@ -758,7 +758,7 @@ save plot
 pdf(file="Past_Host_WGCNA_MergeNetwork.pdf", width=20, height=20)
 #pdf(file = "___.pdf", wi = 9, he = 6)
 
-sizeGrWindow(12, 9)
+#sizeGrWindow(12, 9)
 plotDendroAndColors(geneTree, cbind(dynamicColors, mergedColors),
                     c("Dynamic Hybrid Cut", "Merged hybrid"),
                     dendroLabels = FALSE, hang = 0.03,
@@ -785,12 +785,32 @@ Eigengenes: Module representatives
 plotEigengeneNetworks(mergedMEs, "", marDendro = c(0,4,1,2), marHeatmap = c(3,4,1,2))
 ```
 
+```{r}
+pdf(file="Past_Host_WGCNA_EigengeneNetwork_Dendro_smaller.pdf", width=10, height=6) # 10
+
+plotEigengeneNetworks(mergedMEs, "", marDendro = c(0,4,1,2), marHeatmap = c(3,4,1,2))
+
+dev.off()
+```
+
+
 ## Look at expression patterns of these genes, as they're clustered
 ```{r}
 module.order <- unlist(tapply(1:ncol(dat),as.factor(mergedColors),I))
 m <- t(t(dat[,module.order])/apply(dat[,module.order],2,max))
 heatmap(t(m),zlim=c(0,1),col=gray.colors(100),Rowv=NA,Colv=NA,labRow=NA,scale="none",RowSideColors=mergedColors[module.order])
 ```
+
+```{r}
+pdf(file="Past_Host_WGCNA_ModuleOrder_bySample.pdf", width=10, height=12) 
+
+module.order <- unlist(tapply(1:ncol(dat),as.factor(mergedColors),I))
+m <- t(t(dat[,module.order])/apply(dat[,module.order],2,max))
+heatmap(t(m),zlim=c(0,1),col=gray.colors(100),Rowv=NA,Colv=NA,labRow=NA,scale="none",RowSideColors=mergedColors[module.order])
+
+dev.off()
+```
+
 
 
 ####################################################################
