@@ -26,14 +26,14 @@ library(RColorBrewer)
 library(circlize)
 library(pheatmap)
 library(gplots) #heatmap.2()
-library(ComplexHeatmap)
+#library(ComplexHeatmap)
 
 library(tidyverse)
 library(vegan)
 library(cowplot)
 library(ggrepel)
 library(devtools)
-library(vsn)
+#library(vsn) Need this updated version for new R
 library(dplyr)
 library(plyr)
 library(ggplot2)
@@ -49,8 +49,8 @@ library(data.table)
 # BiocManager::install("arrayQualityMetrics")
 library(BiocManager)
 library(DESeq2)
-library(DEGreport)
-library(arrayQualityMetrics)
+#library(DEGreport)
+#library(arrayQualityMetrics)
 library(locfit)
 ```
 
@@ -917,6 +917,8 @@ OO_LC
 p-adj < 0.1
 ```{r}
 results_LO_LC_.1 <- results(dds, contrast = c("group", "Lagoon.Ojo", "Lagoon.Control"), alpha = 0.1)
+# save rlogged file (saving full results contrast table, and below p-adjusted table)
+saveRDS(results_LO_LC_.1, file = "Past_sym_DE_genes_LO_LC.rds")
 head(results_LO_LC_.1)
 ```
 
@@ -990,6 +992,8 @@ dim(DE_LO_LC_pvalue)
 p-adj < 0.1
 ```{r}
 results_OO_LO_.1 <- results(dds, contrast = c("group", "Ojo.Ojo", "Lagoon.Ojo"), alpha = 0.1)
+# save rlogged file (saving full results contrast table, and below p-adjusted table)
+saveRDS(results_OO_LO_.1, file = "Past_sym_DE_genes_OO_LO.rds")
 head(results_OO_LO_.1)
 ```
 
@@ -1064,6 +1068,8 @@ dim(DE_OO_LO_pvalue)
 p-adj < 0.1
 ```{r}
 results_OO_OC_.1 <- results(dds, contrast = c("group", "Ojo.Ojo", "Ojo.Control"), alpha = 0.1)
+# save rlogged file (saving full results contrast table, and below p-adjusted table)
+saveRDS(results_OO_OC_.1, file = "Past_sym_DE_genes_OO_OC.rds")
 head(results_OO_OC_.1)
 ```
 
@@ -1138,6 +1144,8 @@ dim(DE_OO_OC_pvalue)
 p-adj < 0.1
 ```{r}
 results_OC_LC_.1 <- results(dds, contrast = c("group", "Ojo.Control", "Lagoon.Control"), alpha = 0.1)
+# save rlogged file (saving full results contrast table, and below p-adjusted table)
+saveRDS(results_OC_LC_.1, file = "Past_sym_DE_genes_OC_LC.rds")
 head(results_OC_LC_.1)
 ```
 

@@ -193,15 +193,15 @@ summary2
 
 
 ```{r}
-summary2$Destination <- c("Ambient", "Ambient", "Low pH", "Low pH", "Ambient vs. Low pH", "Ambient vs. Low pH", "Ambient vs. Low pH", "Ambient vs. Low pH") # "Ojo vs. Control", "Ojo"
+summary2$Destination <- c("Ambient pH", "Ambient pH", "Low pH", "Low pH", "Low vs. Ambient pH", "Low vs. Ambient pH", "Low vs. Ambient pH", "Low vs. Ambient pH") # "Ojo vs. Control", "Ojo"
 
 summary2$Destination <- as.factor(summary2$Destination)
-summary2$Destination <- factor(summary2$Destination, levels = c("Ambient", "Low pH", "Ambient vs. Low pH"))
+summary2$Destination <- factor(summary2$Destination, levels = c("Ambient pH", "Low pH", "Low vs. Ambient pH"))
 
 # levels(summary2$group)
 # "OC-LC" "OO-LO" "LO-LC" "OO-OC"
 
-summary2$group <- revalue(summary2$group, c("OC-LC" = "Lagoon vs. Ojo", "OO-LO" = "Lagoon vs. Ojo", "LO-LC" = "Lagoon", "OO-OC" = "Ojo")) 
+summary2$group <- revalue(summary2$group, c("OC-LC" = "Ojo vs. Lagoon", "OO-LO" = "Ojo vs. Lagoon", "LO-LC" = "Lagoon", "OO-OC" = "Ojo")) 
 
 summary2
 ```
@@ -210,7 +210,7 @@ summary2
 ```{r}
 #levels(summary2$group)
 # "OC-LC" "OO-LO" "LO-LC" "OO-OC"
-summary2$group <- factor(summary2$group, levels = c("OC-LC", "OO-LO", "LO-LC", "OO-OC"))
+#summary2$group <- factor(summary2$group, levels = c("OC-LC", "OO-LO", "LO-LC", "OO-OC"))
 
 #write.csv(file = "DEG_summary_Past_Host.csv", x = summary2)
 ```

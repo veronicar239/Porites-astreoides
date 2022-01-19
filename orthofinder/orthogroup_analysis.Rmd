@@ -303,9 +303,29 @@ multi.ortho  <- orthogroups[names_multi.ortho, ]
 head(multi.ortho)
 ```
 
+Consolidate below steps
+```{r}
+# Split out contigs from each orthogroup
+multi.ortho.all <- multi.ortho
+
+# be aware of the blank space " " after the comma after the split function !!
+multi.ortho.all <- separate_rows(multi.ortho.all, gene_Sid, sep = ", ")
+multi.ortho.all <- separate_rows(multi.ortho.all, isotig, sep = ", ")
+
+multi.ortho.all <- past_seq2iso %>% 
+  inner_join(multi.ortho.all, by = "isotig")
+
+head(multi.ortho.all)
+```
+
+
+Previous working out of steps:
+
 Split out contigs from each orthogroup
 ```{r}
-multi.ortho.Sid <- multi.ortho[ , 1:2]
+#multi.ortho.Sid <- multi.ortho[ , 1:2]
+
+multi.ortho.Sid <- multi.ortho
 
 # be aware of the blank space " " after the comma after the split function !!
 s <- strsplit(as.character(multi.ortho.Sid$gene_Sid),", ")
@@ -314,13 +334,12 @@ head(s, 2)
 
 ## Siderastrea multi-orthogroup dataframe
 ```{r}
-multi.ortho.Sid <- multi.ortho[ , 1:2]
+#multi.ortho.Sid <- multi.ortho[ , 1:2]
 
 # be aware of the blank space " " after the comma after the split function !!
 multi.ortho.Sid <- separate_rows(multi.ortho.Sid, gene_Sid, sep = ", ")
 
-multi.ortho.Sid[sapply(multi.ortho.Sid, is.character)] <- lapply(multi.ortho.Sid[sapply(multi.ortho.Sid, is.character)], 
-                                       as.factor)
+#multi.ortho.Sid[sapply(multi.ortho.Sid, is.character)] <- lapply(multi.ortho.Sid[sapply(multi.ortho.Sid, is.character)], as.factor)
 
 multi.ortho.Sid <- multi.ortho.Sid %>% 
   dplyr::rename(gene = gene_Sid)
@@ -337,12 +356,23 @@ head(multi.ortho.Sid)
 ## Porites astreoides multi-orthogroup dataframe
 ```{r}
 multi.ortho.Past <- multi.ortho[ , c(1,3)]
+
 multi.ortho.Past <- separate_rows(multi.ortho.Past, isotig, sep = ", ")
 
-multi.ortho.Past[sapply(multi.ortho.Past, is.character)] <- lapply(multi.ortho.Past[sapply(multi.ortho.Past, is.character)], 
+multi.ortho.Past[sapply(multi.ortho.Past, is.character)] <- lapply(multi.ortho.Past[sapply(multi.ortho.Past, is.character)],
                                        as.factor)
 
-dim(multi.ortho.Past)
+# did not finish re-working
+# dim(multi.ortho.Past)
+# 
+# multi.ortho.all <- multi.ortho.Sid
+# 
+# multi.ortho.all <- separate_rows(multi.ortho.all, isotig, sep = ", ")
+# 
+# multi.ortho.all[sapply(multi.ortho.all, is.character)] <- lapply(multi.ortho.all[sapply(multi.ortho.all, is.character)],
+#                                        as.factor)
+# 
+# dim(multi.ortho.all)
 ```
 
 *Multiple genes per orthogroup*
@@ -399,9 +429,22 @@ head(OO_OC_Past)
 ```{r}
 OO_OC_Sid <- read.csv("~/Documents/Rprojects/postdoc\ Rprojects/ODU_postdoc_Rprojects/Paper_Ojo_gene-expression/Siderastrea/host/Sid_Host_DE_genes_OO_OC_padj.1.csv", header = TRUE) 
 
-OO_OC_Sid$gene <- as.factor(OO_OC_Sid$gene)
+OO_OC_Sid$gene_Sid <- as.factor(OO_OC_Sid$gene)
 head(OO_OC_Sid)
 ```
+
+```{r}
+multi.ortho.OO_OC_Past <- inner_join(multi.ortho.all, OO_OC_Past, by = "gene")
+
+multi.ortho.OO_OC_Past$gene_Sid <- as.factor(multi.ortho.OO_OC_Past$gene_Sid)
+
+head(multi.ortho.OO_OC_Past)
+```
+
+```{r}
+intersect(OO_OC_Sid$gene_Sid, OO_OC_Past$gene_Sid)
+```
+
 
 
 **Sid**

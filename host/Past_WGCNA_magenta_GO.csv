@@ -1,0 +1,520 @@
+"","GO","term","ontology","n","GOMF","GOBP","GOCC"
+"1","GO:0016021","integral component of membrane","CC",48,NA,NA,NA
+"2","GO:0005737","cytoplasm","CC",45,NA,NA,NA
+"3","GO:0005634","nucleus","CC",36,NA,NA,NA
+"4","GO:0005829","cytosol","CC",32,NA,NA,NA
+"5","GO:0005886","plasma membrane","CC",25,NA,NA,NA
+"6","GO:0046872","metal ion binding","MF",24,NA,NA,NA
+"7","GO:0016020","membrane","CC",19,NA,NA,NA
+"8","GO:0005524","ATP binding","MF",18,NA,NA,NA
+"9","GO:0005654","nucleoplasm","CC",13,NA,NA,NA
+"10","GO:0005509","calcium ion binding","MF",11,NA,NA,NA
+"11","GO:0070062","extracellular exosome","CC",11,NA,NA,NA
+"12","GO:0005789","endoplasmic reticulum membrane","CC",10,NA,NA,NA
+"13","GO:0030424","axon","CC",10,NA,NA,NA
+"14","GO:0003723","RNA binding","MF",9,NA,NA,NA
+"15","GO:0005783","endoplasmic reticulum","CC",9,NA,NA,NA
+"16","GO:0005887","integral component of plasma membrane","CC",9,NA,NA,NA
+"17","GO:0005794","Golgi apparatus","CC",8,NA,NA,NA
+"18","GO:0009986","cell surface","CC",8,NA,NA,NA
+"19","GO:0042802","identical protein binding","MF",8,NA,NA,NA
+"20","GO:0045944","positive regulation of transcription by RNA polymerase II","BP",8,NA,NA,NA
+"21","GO:0000398","mRNA splicing, via spliceosome","BP",7,NA,NA,NA
+"22","GO:0005743","mitochondrial inner membrane","CC",7,NA,NA,NA
+"23","GO:0005764","lysosome","CC",7,NA,NA,NA
+"24","GO:0005768","endosome","CC",7,NA,NA,NA
+"25","GO:0003729","mRNA binding","MF",6,NA,NA,NA
+"26","GO:0005576","extracellular region","CC",6,NA,NA,NA
+"27","GO:0005856","cytoskeleton","CC",6,NA,NA,NA
+"28","GO:0006915","apoptotic process","BP",6,NA,NA,NA
+"29","GO:0007165","signal transduction","BP",6,NA,NA,NA
+"30","GO:0008017","microtubule binding","MF",6,NA,NA,NA
+"31","GO:0010628","positive regulation of gene expression","BP",6,NA,NA,NA
+"32","GO:0016607","nuclear speck","CC",6,NA,NA,NA
+"33","GO:0030425","dendrite","CC",6,NA,NA,NA
+"34","GO:0032991","protein-containing complex","CC",6,NA,NA,NA
+"35","GO:0048471","perinuclear region of cytoplasm","CC",6,NA,NA,NA
+"36","GO:0000978","RNA polymerase II cis-regulatory region sequence-specific DNA binding","MF",5,NA,NA,NA
+"37","GO:0003676","nucleic acid binding","MF",5,NA,NA,NA
+"38","GO:0003677","DNA binding","MF",5,NA,NA,NA
+"39","GO:0004674","protein serine/threonine kinase activity","MF",5,NA,NA,NA
+"40","GO:0005525","GTP binding","MF",5,NA,NA,NA
+"41","GO:0005615","extracellular space","CC",5,NA,NA,NA
+"42","GO:0005912","adherens junction","CC",5,NA,NA,NA
+"43","GO:0006954","inflammatory response","BP",5,NA,NA,NA
+"44","GO:0015074","DNA integration","BP",5,NA,NA,NA
+"45","GO:0016323","basolateral plasma membrane","CC",5,NA,NA,NA
+"46","GO:0016324","apical plasma membrane","CC",5,NA,NA,NA
+"47","GO:0030027","lamellipodium","CC",5,NA,NA,NA
+"48","GO:0030154","cell differentiation","BP",5,NA,NA,NA
+"49","GO:0031901","early endosome membrane","CC",5,NA,NA,NA
+"50","GO:0035556","intracellular signal transduction","BP",5,NA,NA,NA
+"51","GO:0042803","protein homodimerization activity","MF",5,NA,NA,NA
+"52","GO:0045202","synapse","CC",5,NA,NA,NA
+"53","GO:0046982","protein heterodimerization activity","MF",5,NA,NA,NA
+"54","GO:0098978","glutamatergic synapse","CC",5,NA,NA,NA
+"55","GO:0000139","Golgi membrane","CC",4,NA,NA,NA
+"56","GO:0003724","RNA helicase activity","MF",4,NA,NA,NA
+"57","GO:0003924","GTPase activity","MF",4,NA,NA,NA
+"58","GO:0005085","guanyl-nucleotide exchange factor activity","MF",4,NA,NA,NA
+"59","GO:0006357","regulation of transcription by RNA polymerase II","BP",4,NA,NA,NA
+"60","GO:0006468","protein phosphorylation","BP",4,NA,NA,NA
+"61","GO:0006886","intracellular protein transport","BP",4,NA,NA,NA
+"62","GO:0006897","endocytosis","BP",4,NA,NA,NA
+"63","GO:0007155","cell adhesion","BP",4,NA,NA,NA
+"64","GO:0008270","zinc ion binding","MF",4,NA,NA,NA
+"65","GO:0008283","cell population proliferation","BP",4,NA,NA,NA
+"66","GO:0010008","endosome membrane","CC",4,NA,NA,NA
+"67","GO:0030198","extracellular matrix organization","BP",4,NA,NA,NA
+"68","GO:0030659","cytoplasmic vesicle membrane","CC",4,NA,NA,NA
+"69","GO:0035904","aorta development","BP",4,NA,NA,NA
+"70","GO:0045296","cadherin binding","MF",4,NA,NA,NA
+"71","GO:0051015","actin filament binding","MF",4,NA,NA,NA
+"72","GO:0061630","ubiquitin protein ligase activity","MF",4,NA,NA,NA
+"73","GO:0106310",NA,NA,4,NA,NA,NA
+"74","GO:0106311",NA,NA,4,NA,NA,NA
+"75","GO:0000122","negative regulation of transcription by RNA polymerase II","BP",3,NA,NA,NA
+"76","GO:0000209","protein polyubiquitination","BP",3,NA,NA,NA
+"77","GO:0000932","P-body","CC",3,NA,NA,NA
+"78","GO:0000981","DNA-binding transcription factor activity, RNA polymerase II-specific","MF",3,NA,NA,NA
+"79","GO:0003713","transcription coactivator activity","MF",3,NA,NA,NA
+"80","GO:0003743","translation initiation factor activity","MF",3,NA,NA,NA
+"81","GO:0005096","GTPase activator activity","MF",3,NA,NA,NA
+"82","GO:0005200","structural constituent of cytoskeleton","MF",3,NA,NA,NA
+"83","GO:0005635","nuclear envelope","CC",3,NA,NA,NA
+"84","GO:0005739","mitochondrion","CC",3,NA,NA,NA
+"85","GO:0005769","early endosome","CC",3,NA,NA,NA
+"86","GO:0005802","trans-Golgi network","CC",3,NA,NA,NA
+"87","GO:0005923","bicellular tight junction","CC",3,NA,NA,NA
+"88","GO:0005929","cilium","CC",3,NA,NA,NA
+"89","GO:0006310","DNA recombination","BP",3,NA,NA,NA
+"90","GO:0006508","proteolysis","BP",3,NA,NA,NA
+"91","GO:0007050","cell cycle arrest","BP",3,NA,NA,NA
+"92","GO:0007399","nervous system development","BP",3,NA,NA,NA
+"93","GO:0007411","axon guidance","BP",3,NA,NA,NA
+"94","GO:0007420","brain development","BP",3,NA,NA,NA
+"95","GO:0007507","heart development","BP",3,NA,NA,NA
+"96","GO:0008233","peptidase activity","MF",3,NA,NA,NA
+"97","GO:0008285","negative regulation of cell population proliferation","BP",3,NA,NA,NA
+"98","GO:0009925","basal plasma membrane","CC",3,NA,NA,NA
+"99","GO:0010468","regulation of gene expression","BP",3,NA,NA,NA
+"100","GO:0014069","postsynaptic density","CC",3,NA,NA,NA
+"101","GO:0015031","protein transport","BP",3,NA,NA,NA
+"102","GO:0016055","Wnt signaling pathway","BP",3,NA,NA,NA
+"103","GO:0016477","cell migration","BP",3,NA,NA,NA
+"104","GO:0019899","enzyme binding","MF",3,NA,NA,NA
+"105","GO:0030018","Z disc","CC",3,NA,NA,NA
+"106","GO:0031267","small GTPase binding","MF",3,NA,NA,NA
+"107","GO:0031410","cytoplasmic vesicle","CC",3,NA,NA,NA
+"108","GO:0043005","neuron projection","CC",3,NA,NA,NA
+"109","GO:0043025","neuronal cell body","CC",3,NA,NA,NA
+"110","GO:0043066","negative regulation of apoptotic process","BP",3,NA,NA,NA
+"111","GO:0043547","positive regulation of GTPase activity","BP",3,NA,NA,NA
+"112","GO:0045121","membrane raft","CC",3,NA,NA,NA
+"113","GO:0046777","protein autophosphorylation","BP",3,NA,NA,NA
+"114","GO:0051087","chaperone binding","MF",3,NA,NA,NA
+"115","GO:0051897","positive regulation of protein kinase B signaling","BP",3,NA,NA,NA
+"116","GO:0000226","microtubule cytoskeleton organization","BP",2,NA,NA,NA
+"117","GO:0000785","chromatin","CC",2,NA,NA,NA
+"118","GO:0000902","cell morphogenesis","BP",2,NA,NA,NA
+"119","GO:0001228","DNA-binding transcription activator activity, RNA polymerase II-specific","MF",2,NA,NA,NA
+"120","GO:0001657","ureteric bud development","BP",2,NA,NA,NA
+"121","GO:0001666","response to hypoxia","BP",2,NA,NA,NA
+"122","GO:0001726","ruffle","CC",2,NA,NA,NA
+"123","GO:0001822","kidney development","BP",2,NA,NA,NA
+"124","GO:0001889","liver development","BP",2,NA,NA,NA
+"125","GO:0003281","ventricular septum development","BP",2,NA,NA,NA
+"126","GO:0004222","metalloendopeptidase activity","MF",2,NA,NA,NA
+"127","GO:0004672","protein kinase activity","MF",2,NA,NA,NA
+"128","GO:0005198","structural molecule activity","MF",2,NA,NA,NA
+"129","GO:0005516","calmodulin binding","MF",2,NA,NA,NA
+"130","GO:0005581","collagen trimer","CC",2,NA,NA,NA
+"131","GO:0005681","spliceosomal complex","CC",2,NA,NA,NA
+"132","GO:0005765","lysosomal membrane","CC",2,NA,NA,NA
+"133","GO:0005770","late endosome","CC",2,NA,NA,NA
+"134","GO:0005774","vacuolar membrane","CC",2,NA,NA,NA
+"135","GO:0005813","centrosome","CC",2,NA,NA,NA
+"136","GO:0005874","microtubule","CC",2,NA,NA,NA
+"137","GO:0005905","clathrin-coated pit","CC",2,NA,NA,NA
+"138","GO:0005911","cell-cell junction","CC",2,NA,NA,NA
+"139","GO:0005925","focal adhesion","CC",2,NA,NA,NA
+"140","GO:0006281","DNA repair","BP",2,NA,NA,NA
+"141","GO:0006355","regulation of transcription, DNA-templated","BP",2,NA,NA,NA
+"142","GO:0006397","mRNA processing","BP",2,NA,NA,NA
+"143","GO:0006814","sodium ion transport","BP",2,NA,NA,NA
+"144","GO:0006888","endoplasmic reticulum to Golgi vesicle-mediated transport","BP",2,NA,NA,NA
+"145","GO:0006955","immune response","BP",2,NA,NA,NA
+"146","GO:0006974","cellular response to DNA damage stimulus","BP",2,NA,NA,NA
+"147","GO:0007018","microtubule-based movement","BP",2,NA,NA,NA
+"148","GO:0007156","homophilic cell adhesion via plasma membrane adhesion molecules","BP",2,NA,NA,NA
+"149","GO:0007179","transforming growth factor beta receptor signaling pathway","BP",2,NA,NA,NA
+"150","GO:0007186","G protein-coupled receptor signaling pathway","BP",2,NA,NA,NA
+"151","GO:0007264","small GTPase mediated signal transduction","BP",2,NA,NA,NA
+"152","GO:0007283","spermatogenesis","BP",2,NA,NA,NA
+"153","GO:0007409","axonogenesis","BP",2,NA,NA,NA
+"154","GO:0007417","central nervous system development","BP",2,NA,NA,NA
+"155","GO:0007605","sensory perception of sound","BP",2,NA,NA,NA
+"156","GO:0008021","synaptic vesicle","CC",2,NA,NA,NA
+"157","GO:0008092","cytoskeletal protein binding","MF",2,NA,NA,NA
+"158","GO:0008137","NADH dehydrogenase (ubiquinone) activity","MF",2,NA,NA,NA
+"159","GO:0008201","heparin binding","MF",2,NA,NA,NA
+"160","GO:0008380","RNA splicing","BP",2,NA,NA,NA
+"161","GO:0009506","plasmodesma","CC",2,NA,NA,NA
+"162","GO:0009897","external side of plasma membrane","CC",2,NA,NA,NA
+"163","GO:0010494","cytoplasmic stress granule","CC",2,NA,NA,NA
+"164","GO:0016529","sarcoplasmic reticulum","CC",2,NA,NA,NA
+"165","GO:0016604","nuclear body","CC",2,NA,NA,NA
+"166","GO:0016787","hydrolase activity","MF",2,NA,NA,NA
+"167","GO:0016887","ATPase activity","MF",2,NA,NA,NA
+"168","GO:0018279","protein N-linked glycosylation via asparagine","BP",2,NA,NA,NA
+"169","GO:0030628","pre-mRNA 3'-splice site binding","MF",2,NA,NA,NA
+"170","GO:0031012","extracellular matrix","CC",2,NA,NA,NA
+"171","GO:0031122","cytoplasmic microtubule organization","BP",2,NA,NA,NA
+"172","GO:0031252","cell leading edge","CC",2,NA,NA,NA
+"173","GO:0031625","ubiquitin protein ligase binding","MF",2,NA,NA,NA
+"174","GO:0032092","positive regulation of protein binding","BP",2,NA,NA,NA
+"175","GO:0034976","response to endoplasmic reticulum stress","BP",2,NA,NA,NA
+"176","GO:0035725","sodium ion transmembrane transport","BP",2,NA,NA,NA
+"177","GO:0042277","peptide binding","MF",2,NA,NA,NA
+"178","GO:0042472","inner ear morphogenesis","BP",2,NA,NA,NA
+"179","GO:0042493","response to drug","BP",2,NA,NA,NA
+"180","GO:0042805","actinin binding","MF",2,NA,NA,NA
+"181","GO:0042981","regulation of apoptotic process","BP",2,NA,NA,NA
+"182","GO:0043123","positive regulation of I-kappaB kinase/NF-kappaB signaling","BP",2,NA,NA,NA
+"183","GO:0043231","intracellular membrane-bounded organelle","CC",2,NA,NA,NA
+"184","GO:0043565","sequence-specific DNA binding","MF",2,NA,NA,NA
+"185","GO:0045669","positive regulation of osteoblast differentiation","BP",2,NA,NA,NA
+"186","GO:0045893","positive regulation of transcription, DNA-templated","BP",2,NA,NA,NA
+"187","GO:0046961","proton-transporting ATPase activity, rotational mechanism","MF",2,NA,NA,NA
+"188","GO:0050679","positive regulation of epithelial cell proliferation","BP",2,NA,NA,NA
+"189","GO:0050772","positive regulation of axonogenesis","BP",2,NA,NA,NA
+"190","GO:0050775","positive regulation of dendrite morphogenesis","BP",2,NA,NA,NA
+"191","GO:0050808","synapse organization","BP",2,NA,NA,NA
+"192","GO:0050821","protein stabilization","BP",2,NA,NA,NA
+"193","GO:0051117","ATPase binding","MF",2,NA,NA,NA
+"194","GO:0060976","coronary vasculature development","BP",2,NA,NA,NA
+"195","GO:0062023","collagen-containing extracellular matrix","CC",2,NA,NA,NA
+"196","GO:0070469","respirasome","CC",2,NA,NA,NA
+"197","GO:0070588","calcium ion transmembrane transport","BP",2,NA,NA,NA
+"198","GO:0071805","potassium ion transmembrane transport","BP",2,NA,NA,NA
+"199","GO:0072659","protein localization to plasma membrane","BP",2,NA,NA,NA
+"200","GO:0089701","U2AF","CC",2,NA,NA,NA
+"201","GO:0090263","positive regulation of canonical Wnt signaling pathway","BP",2,NA,NA,NA
+"202","GO:0098685","Schaffer collateral - CA1 synapse","CC",2,NA,NA,NA
+"203","GO:0106306",NA,NA,2,NA,NA,NA
+"204","GO:0106307",NA,NA,2,NA,NA,NA
+"205","GO:1990837","sequence-specific double-stranded DNA binding","MF",2,NA,NA,NA
+"206","GO:0000278","mitotic cell cycle","BP",1,NA,NA,NA
+"207","GO:0000287","magnesium ion binding","MF",1,NA,NA,NA
+"208","GO:0000288","nuclear-transcribed mRNA catabolic process, deadenylation-dependent decay","BP",1,NA,NA,NA
+"209","GO:0000387","spliceosomal snRNP assembly","BP",1,NA,NA,NA
+"210","GO:0001525","angiogenesis","BP",1,NA,NA,NA
+"211","GO:0001650","fibrillar center","CC",1,NA,NA,NA
+"212","GO:0001658","branching involved in ureteric bud morphogenesis","BP",1,NA,NA,NA
+"213","GO:0001701","in utero embryonic development","BP",1,NA,NA,NA
+"214","GO:0001750","photoreceptor outer segment","CC",1,NA,NA,NA
+"215","GO:0001764","neuron migration","BP",1,NA,NA,NA
+"216","GO:0001843","neural tube closure","BP",1,NA,NA,NA
+"217","GO:0001892","embryonic placenta development","BP",1,NA,NA,NA
+"218","GO:0001934","positive regulation of protein phosphorylation","BP",1,NA,NA,NA
+"219","GO:0001947","heart looping","BP",1,NA,NA,NA
+"220","GO:0002040","sprouting angiogenesis","BP",1,NA,NA,NA
+"221","GO:0002576","platelet degranulation","BP",1,NA,NA,NA
+"222","GO:0003682","chromatin binding","MF",1,NA,NA,NA
+"223","GO:0003700","DNA-binding transcription factor activity","MF",1,NA,NA,NA
+"224","GO:0003735","structural constituent of ribosome","MF",1,NA,NA,NA
+"225","GO:0003779","actin binding","MF",1,NA,NA,NA
+"226","GO:0003964","RNA-directed DNA polymerase activity","MF",1,NA,NA,NA
+"227","GO:0004114","3',5'-cyclic-nucleotide phosphodiesterase activity","MF",1,NA,NA,NA
+"228","GO:0004115","3',5'-cyclic-AMP phosphodiesterase activity","MF",1,NA,NA,NA
+"229","GO:0004197","cysteine-type endopeptidase activity","MF",1,NA,NA,NA
+"230","GO:0004386","helicase activity","MF",1,NA,NA,NA
+"231","GO:0004725","protein tyrosine phosphatase activity","MF",1,NA,NA,NA
+"232","GO:0004842","ubiquitin-protein transferase activity","MF",1,NA,NA,NA
+"233","GO:0004888","transmembrane signaling receptor activity","MF",1,NA,NA,NA
+"234","GO:0004930","G protein-coupled receptor activity","MF",1,NA,NA,NA
+"235","GO:0005044","scavenger receptor activity","MF",1,NA,NA,NA
+"236","GO:0005102","signaling receptor binding","MF",1,NA,NA,NA
+"237","GO:0005178","integrin binding","MF",1,NA,NA,NA
+"238","GO:0005179","hormone activity","MF",1,NA,NA,NA
+"239","GO:0005244","voltage-gated ion channel activity","MF",1,NA,NA,NA
+"240","GO:0005248","voltage-gated sodium channel activity","MF",1,NA,NA,NA
+"241","GO:0005261","cation channel activity","MF",1,NA,NA,NA
+"242","GO:0005507","copper ion binding","MF",1,NA,NA,NA
+"243","GO:0005604","basement membrane","CC",1,NA,NA,NA
+"244","GO:0005637","nuclear inner membrane","CC",1,NA,NA,NA
+"245","GO:0005730","nucleolus","CC",1,NA,NA,NA
+"246","GO:0005759","mitochondrial matrix","CC",1,NA,NA,NA
+"247","GO:0005773","vacuole","CC",1,NA,NA,NA
+"248","GO:0005788","endoplasmic reticulum lumen","CC",1,NA,NA,NA
+"249","GO:0005796","Golgi lumen","CC",1,NA,NA,NA
+"250","GO:0005815","microtubule organizing center","CC",1,NA,NA,NA
+"251","GO:0005865","striated muscle thin filament","CC",1,NA,NA,NA
+"252","GO:0005871","kinesin complex","CC",1,NA,NA,NA
+"253","GO:0005938","cell cortex","CC",1,NA,NA,NA
+"254","GO:0006103","2-oxoglutarate metabolic process","BP",1,NA,NA,NA
+"255","GO:0006260","DNA replication","BP",1,NA,NA,NA
+"256","GO:0006302","double-strand break repair","BP",1,NA,NA,NA
+"257","GO:0006406","mRNA export from nucleus","BP",1,NA,NA,NA
+"258","GO:0006412","translation","BP",1,NA,NA,NA
+"259","GO:0006413","translational initiation","BP",1,NA,NA,NA
+"260","GO:0006417","regulation of translation","BP",1,NA,NA,NA
+"261","GO:0006511","ubiquitin-dependent protein catabolic process","BP",1,NA,NA,NA
+"262","GO:0006536","glutamate metabolic process","BP",1,NA,NA,NA
+"263","GO:0006606","protein import into nucleus","BP",1,NA,NA,NA
+"264","GO:0006665","sphingolipid metabolic process","BP",1,NA,NA,NA
+"265","GO:0006825","copper ion transport","BP",1,NA,NA,NA
+"266","GO:0006874","cellular calcium ion homeostasis","BP",1,NA,NA,NA
+"267","GO:0006898","receptor-mediated endocytosis","BP",1,NA,NA,NA
+"268","GO:0006911","phagocytosis, engulfment","BP",1,NA,NA,NA
+"269","GO:0006914","autophagy","BP",1,NA,NA,NA
+"270","GO:0006919","activation of cysteine-type endopeptidase activity involved in apoptotic process","BP",1,NA,NA,NA
+"271","GO:0006979","response to oxidative stress","BP",1,NA,NA,NA
+"272","GO:0007005","mitochondrion organization","BP",1,NA,NA,NA
+"273","GO:0007009","plasma membrane organization","BP",1,NA,NA,NA
+"274","GO:0007015","actin filament organization","BP",1,NA,NA,NA
+"275","GO:0007160","cell-matrix adhesion","BP",1,NA,NA,NA
+"276","GO:0007163","establishment or maintenance of cell polarity","BP",1,NA,NA,NA
+"277","GO:0007183","SMAD protein complex assembly","BP",1,NA,NA,NA
+"278","GO:0007275","multicellular organism development","BP",1,NA,NA,NA
+"279","GO:0007286","spermatid development","BP",1,NA,NA,NA
+"280","GO:0007367","segment polarity determination","BP",1,NA,NA,NA
+"281","GO:0007517","muscle organ development","BP",1,NA,NA,NA
+"282","GO:0007568","aging","BP",1,NA,NA,NA
+"283","GO:0007601","visual perception","BP",1,NA,NA,NA
+"284","GO:0007626","locomotory behavior","BP",1,NA,NA,NA
+"285","GO:0008022","protein C-terminus binding","MF",1,NA,NA,NA
+"286","GO:0008134","transcription factor binding","MF",1,NA,NA,NA
+"287","GO:0008139","nuclear localization sequence binding","MF",1,NA,NA,NA
+"288","GO:0008234","cysteine-type peptidase activity","MF",1,NA,NA,NA
+"289","GO:0008284","positive regulation of cell population proliferation","BP",1,NA,NA,NA
+"290","GO:0008340","determination of adult lifespan","BP",1,NA,NA,NA
+"291","GO:0008484","sulfuric ester hydrolase activity","MF",1,NA,NA,NA
+"292","GO:0008519","ammonium transmembrane transporter activity","MF",1,NA,NA,NA
+"293","GO:0008544","epidermis development","BP",1,NA,NA,NA
+"294","GO:0008553","proton-exporting ATPase activity, phosphorylative mechanism","MF",1,NA,NA,NA
+"295","GO:0009058","biosynthetic process","BP",1,NA,NA,NA
+"296","GO:0009408","response to heat","BP",1,NA,NA,NA
+"297","GO:0009653","anatomical structure morphogenesis","BP",1,NA,NA,NA
+"298","GO:0009887","animal organ morphogenesis","BP",1,NA,NA,NA
+"299","GO:0009888","tissue development","BP",1,NA,NA,NA
+"300","GO:0009898","cytoplasmic side of plasma membrane","CC",1,NA,NA,NA
+"301","GO:0009952","anterior/posterior pattern specification","BP",1,NA,NA,NA
+"302","GO:0010595","positive regulation of endothelial cell migration","BP",1,NA,NA,NA
+"303","GO:0010754","negative regulation of cGMP-mediated signaling","BP",1,NA,NA,NA
+"304","GO:0010842","retina layer formation","BP",1,NA,NA,NA
+"305","GO:0012505","endomembrane system","CC",1,NA,NA,NA
+"306","GO:0014704","intercalated disc","CC",1,NA,NA,NA
+"307","GO:0015297","antiporter activity","MF",1,NA,NA,NA
+"308","GO:0015629","actin cytoskeleton","CC",1,NA,NA,NA
+"309","GO:0016192","vesicle-mediated transport","BP",1,NA,NA,NA
+"310","GO:0016342","catenin complex","CC",1,NA,NA,NA
+"311","GO:0016358","dendrite development","BP",1,NA,NA,NA
+"312","GO:0016471","vacuolar proton-transporting V-type ATPase complex","CC",1,NA,NA,NA
+"313","GO:0016740","transferase activity","MF",1,NA,NA,NA
+"314","GO:0016829","lyase activity","MF",1,NA,NA,NA
+"315","GO:0016973","poly(A)+ mRNA export from nucleus","BP",1,NA,NA,NA
+"316","GO:0017151","DEAD/H-box RNA helicase binding","MF",1,NA,NA,NA
+"317","GO:0018105","peptidyl-serine phosphorylation","BP",1,NA,NA,NA
+"318","GO:0018107","peptidyl-threonine phosphorylation","BP",1,NA,NA,NA
+"319","GO:0019901","protein kinase binding","MF",1,NA,NA,NA
+"320","GO:0019903","protein phosphatase binding","MF",1,NA,NA,NA
+"321","GO:0019904","protein domain specific binding","MF",1,NA,NA,NA
+"322","GO:0019934","cGMP-mediated signaling","BP",1,NA,NA,NA
+"323","GO:0021702","cerebellar Purkinje cell differentiation","BP",1,NA,NA,NA
+"324","GO:0021915","neural tube development","BP",1,NA,NA,NA
+"325","GO:0022857","transmembrane transporter activity","MF",1,NA,NA,NA
+"326","GO:0030017","sarcomere","CC",1,NA,NA,NA
+"327","GO:0030036","actin cytoskeleton organization","BP",1,NA,NA,NA
+"328","GO:0030056","hemidesmosome","CC",1,NA,NA,NA
+"329","GO:0030097","hemopoiesis","BP",1,NA,NA,NA
+"330","GO:0030140","trans-Golgi network transport vesicle","CC",1,NA,NA,NA
+"331","GO:0030145","manganese ion binding","MF",1,NA,NA,NA
+"332","GO:0030169","low-density lipoprotein particle binding","MF",1,NA,NA,NA
+"333","GO:0030177","positive regulation of Wnt signaling pathway","BP",1,NA,NA,NA
+"334","GO:0030178","negative regulation of Wnt signaling pathway","BP",1,NA,NA,NA
+"335","GO:0030199","collagen fibril organization","BP",1,NA,NA,NA
+"336","GO:0030315","T-tubule","CC",1,NA,NA,NA
+"337","GO:0030334","regulation of cell migration","BP",1,NA,NA,NA
+"338","GO:0030335","positive regulation of cell migration","BP",1,NA,NA,NA
+"339","GO:0030426","growth cone","CC",1,NA,NA,NA
+"340","GO:0030509","BMP signaling pathway","BP",1,NA,NA,NA
+"341","GO:0030511","positive regulation of transforming growth factor beta receptor signaling pathway","BP",1,NA,NA,NA
+"342","GO:0030544","Hsp70 protein binding","MF",1,NA,NA,NA
+"343","GO:0030707","ovarian follicle cell development","BP",1,NA,NA,NA
+"344","GO:0030837","negative regulation of actin filament polymerization","BP",1,NA,NA,NA
+"345","GO:0031047","gene silencing by RNA","BP",1,NA,NA,NA
+"346","GO:0031069","hair follicle morphogenesis","BP",1,NA,NA,NA
+"347","GO:0031093","platelet alpha granule lumen","CC",1,NA,NA,NA
+"348","GO:0031175","neuron projection development","BP",1,NA,NA,NA
+"349","GO:0031490","chromatin DNA binding","MF",1,NA,NA,NA
+"350","GO:0031638","zymogen activation","BP",1,NA,NA,NA
+"351","GO:0031673","H zone","CC",1,NA,NA,NA
+"352","GO:0031902","late endosome membrane","CC",1,NA,NA,NA
+"353","GO:0031965","nuclear membrane","CC",1,NA,NA,NA
+"354","GO:0032465","regulation of cytokinesis","BP",1,NA,NA,NA
+"355","GO:0032526","response to retinoic acid","BP",1,NA,NA,NA
+"356","GO:0032587","ruffle membrane","CC",1,NA,NA,NA
+"357","GO:0032956","regulation of actin cytoskeleton organization","BP",1,NA,NA,NA
+"358","GO:0033116","endoplasmic reticulum-Golgi intermediate compartment membrane","CC",1,NA,NA,NA
+"359","GO:0033962","cytoplasmic mRNA processing body assembly","BP",1,NA,NA,NA
+"360","GO:0034063","stress granule assembly","BP",1,NA,NA,NA
+"361","GO:0034451","centriolar satellite","CC",1,NA,NA,NA
+"362","GO:0034599","cellular response to oxidative stress","BP",1,NA,NA,NA
+"363","GO:0034613","cellular protein localization","BP",1,NA,NA,NA
+"364","GO:0034703","cation channel complex","CC",1,NA,NA,NA
+"365","GO:0034765","regulation of ion transmembrane transport","BP",1,NA,NA,NA
+"366","GO:0035023","regulation of Rho protein signal transduction","BP",1,NA,NA,NA
+"367","GO:0035064","methylated histone binding","MF",1,NA,NA,NA
+"368","GO:0035091","phosphatidylinositol binding","MF",1,NA,NA,NA
+"369","GO:0035329","hippo signaling","BP",1,NA,NA,NA
+"370","GO:0035435","phosphate ion transmembrane transport","BP",1,NA,NA,NA
+"371","GO:0036064","ciliary basal body","CC",1,NA,NA,NA
+"372","GO:0038023","signaling receptor activity","MF",1,NA,NA,NA
+"373","GO:0042060","wound healing","BP",1,NA,NA,NA
+"374","GO:0042147","retrograde transport, endosome to Golgi","BP",1,NA,NA,NA
+"375","GO:0042301","phosphate ion binding","MF",1,NA,NA,NA
+"376","GO:0042327","positive regulation of phosphorylation","BP",1,NA,NA,NA
+"377","GO:0042383","sarcolemma","CC",1,NA,NA,NA
+"378","GO:0042470","melanosome","CC",1,NA,NA,NA
+"379","GO:0042552","myelination","BP",1,NA,NA,NA
+"380","GO:0043001","Golgi to plasma membrane protein transport","BP",1,NA,NA,NA
+"381","GO:0043065","positive regulation of apoptotic process","BP",1,NA,NA,NA
+"382","GO:0043087","regulation of GTPase activity","BP",1,NA,NA,NA
+"383","GO:0043113","receptor clustering","BP",1,NA,NA,NA
+"384","GO:0043130","ubiquitin binding","MF",1,NA,NA,NA
+"385","GO:0043235","receptor complex","CC",1,NA,NA,NA
+"386","GO:0043410","positive regulation of MAPK cascade","BP",1,NA,NA,NA
+"387","GO:0043488","regulation of mRNA stability","BP",1,NA,NA,NA
+"388","GO:0043652","engulfment of apoptotic cell","BP",1,NA,NA,NA
+"389","GO:0044291","cell-cell contact zone","CC",1,NA,NA,NA
+"390","GO:0045053","protein retention in Golgi apparatus","BP",1,NA,NA,NA
+"391","GO:0045087","innate immune response","BP",1,NA,NA,NA
+"392","GO:0045177","apical part of cell","CC",1,NA,NA,NA
+"393","GO:0045184","establishment of protein localization","BP",1,NA,NA,NA
+"394","GO:0045211","postsynaptic membrane","CC",1,NA,NA,NA
+"395","GO:0045214","sarcomere organization","BP",1,NA,NA,NA
+"396","GO:0045429","positive regulation of nitric oxide biosynthetic process","BP",1,NA,NA,NA
+"397","GO:0045494","photoreceptor cell maintenance","BP",1,NA,NA,NA
+"398","GO:0045599","negative regulation of fat cell differentiation","BP",1,NA,NA,NA
+"399","GO:0045727","positive regulation of translation","BP",1,NA,NA,NA
+"400","GO:0045766","positive regulation of angiogenesis","BP",1,NA,NA,NA
+"401","GO:0045773","positive regulation of axon extension","BP",1,NA,NA,NA
+"402","GO:0045807","positive regulation of endocytosis","BP",1,NA,NA,NA
+"403","GO:0045892","negative regulation of transcription, DNA-templated","BP",1,NA,NA,NA
+"404","GO:0046983","protein dimerization activity","MF",1,NA,NA,NA
+"405","GO:0048025","negative regulation of mRNA splicing, via spliceosome","BP",1,NA,NA,NA
+"406","GO:0048255","mRNA stabilization","BP",1,NA,NA,NA
+"407","GO:0048266","behavioral response to pain","BP",1,NA,NA,NA
+"408","GO:0048511","rhythmic process","BP",1,NA,NA,NA
+"409","GO:0048589","developmental growth","BP",1,NA,NA,NA
+"410","GO:0048813","dendrite morphogenesis","BP",1,NA,NA,NA
+"411","GO:0048856","anatomical structure development","BP",1,NA,NA,NA
+"412","GO:0050714","positive regulation of protein secretion","BP",1,NA,NA,NA
+"413","GO:0050728","negative regulation of inflammatory response","BP",1,NA,NA,NA
+"414","GO:0050770","regulation of axonogenesis","BP",1,NA,NA,NA
+"415","GO:0050885","neuromuscular process controlling balance","BP",1,NA,NA,NA
+"416","GO:0050982","detection of mechanical stimulus","BP",1,NA,NA,NA
+"417","GO:0051028","mRNA transport","BP",1,NA,NA,NA
+"418","GO:0051148","negative regulation of muscle cell differentiation","BP",1,NA,NA,NA
+"419","GO:0051170","import into nucleus","BP",1,NA,NA,NA
+"420","GO:0051262","protein tetramerization","BP",1,NA,NA,NA
+"421","GO:0051289","protein homotetramerization","BP",1,NA,NA,NA
+"422","GO:0051301","cell division","BP",1,NA,NA,NA
+"423","GO:0051321","meiotic cell cycle","BP",1,NA,NA,NA
+"424","GO:0051371","muscle alpha-actinin binding","MF",1,NA,NA,NA
+"425","GO:0051592","response to calcium ion","BP",1,NA,NA,NA
+"426","GO:0051603","proteolysis involved in cellular protein catabolic process","BP",1,NA,NA,NA
+"427","GO:0051607","defense response to virus","BP",1,NA,NA,NA
+"428","GO:0051965","positive regulation of synapse assembly","BP",1,NA,NA,NA
+"429","GO:0055003","cardiac myofibril assembly","BP",1,NA,NA,NA
+"430","GO:0060170","ciliary membrane","CC",1,NA,NA,NA
+"431","GO:0060216","definitive hemopoiesis","BP",1,NA,NA,NA
+"432","GO:0060219","camera-type eye photoreceptor cell differentiation","BP",1,NA,NA,NA
+"433","GO:0060395","SMAD protein signal transduction","BP",1,NA,NA,NA
+"434","GO:0060487","lung epithelial cell differentiation","BP",1,NA,NA,NA
+"435","GO:0060996","dendritic spine development","BP",1,NA,NA,NA
+"436","GO:0060997","dendritic spine morphogenesis","BP",1,NA,NA,NA
+"437","GO:0060999","positive regulation of dendritic spine development","BP",1,NA,NA,NA
+"438","GO:0061608","nuclear import signal receptor activity","MF",1,NA,NA,NA
+"439","GO:0070374","positive regulation of ERK1 and ERK2 cascade","BP",1,NA,NA,NA
+"440","GO:0070410","co-SMAD binding","MF",1,NA,NA,NA
+"441","GO:0070411","I-SMAD binding","MF",1,NA,NA,NA
+"442","GO:0071144","heteromeric SMAD protein complex","CC",1,NA,NA,NA
+"443","GO:0071222","cellular response to lipopolysaccharide","BP",1,NA,NA,NA
+"444","GO:0071277","cellular response to calcium ion","BP",1,NA,NA,NA
+"445","GO:0071320","cellular response to cAMP","BP",1,NA,NA,NA
+"446","GO:0071456","cellular response to hypoxia","BP",1,NA,NA,NA
+"447","GO:0071560","cellular response to transforming growth factor beta stimulus","BP",1,NA,NA,NA
+"448","GO:0072307","regulation of metanephric nephron tubule epithelial cell differentiation","BP",1,NA,NA,NA
+"449","GO:0072686","mitotic spindle","CC",1,NA,NA,NA
+"450","GO:0090090","negative regulation of canonical Wnt signaling pathway","BP",1,NA,NA,NA
+"451","GO:0090307","mitotic spindle assembly","BP",1,NA,NA,NA
+"452","GO:0097242","amyloid-beta clearance","BP",1,NA,NA,NA
+"453","GO:0097730","non-motile cilium","CC",1,NA,NA,NA
+"454","GO:0098662","inorganic cation transmembrane transport","BP",1,NA,NA,NA
+"455","GO:0099092","postsynaptic density, intracellular component","CC",1,NA,NA,NA
+"456","GO:0140581",NA,NA,1,NA,NA,NA
+"457","GO:1902036","regulation of hematopoietic stem cell differentiation","BP",1,NA,NA,NA
+"458","GO:1902895","positive regulation of pri-miRNA transcription by RNA polymerase II","BP",1,NA,NA,NA
+"459","GO:1904115","axon cytoplasm","CC",1,NA,NA,NA
+"460",NA,NA,NA,26,"No_GOMF",NA,NA
+"461",NA,NA,NA,24,"metal ion binding (GO:0046872)",NA,NA
+"462",NA,NA,NA,18,"ATP binding (GO:0005524)",NA,NA
+"463",NA,NA,NA,11,"calcium ion binding (GO:0005509)",NA,NA
+"464",NA,NA,NA,9,"RNA binding (GO:0003723)",NA,NA
+"465",NA,NA,NA,8,"identical protein binding (GO:0042802)",NA,NA
+"466",NA,NA,NA,6,"microtubule binding (GO:0008017)",NA,NA
+"467",NA,NA,NA,6,"mRNA binding (GO:0003729)",NA,NA
+"468",NA,NA,NA,5,"DNA binding (GO:0003677)",NA,NA
+"469",NA,NA,NA,5,"GTP binding (GO:0005525)",NA,NA
+"470",NA,NA,NA,5,"nucleic acid binding (GO:0003676)",NA,NA
+"471",NA,NA,NA,5,"protein heterodimerization activity (GO:0046982)",NA,NA
+"472",NA,NA,NA,5,"protein homodimerization activity (GO:0042803)",NA,NA
+"473",NA,NA,NA,5,"protein serine/threonine kinase activity (GO:0004674)",NA,NA
+"474",NA,NA,NA,5,"RNA polymerase II cis-regulatory region sequence-specific DNA binding (GO:0000978)",NA,NA
+"475",NA,NA,NA,4,"actin filament binding (GO:0051015)",NA,NA
+"476",NA,NA,NA,4,"cadherin binding (GO:0045296)",NA,NA
+"477",NA,NA,NA,4,"GTPase activity (GO:0003924)",NA,NA
+"478",NA,NA,NA,4,"guanyl-nucleotide exchange factor activity (GO:0005085)",NA,NA
+"479",NA,NA,NA,4,"protein serine kinase activity (GO:0106310)",NA,NA
+"480",NA,NA,NA,32,NA,"No_GOBP",NA
+"481",NA,NA,NA,8,NA,"positive regulation of transcription by RNA polymerase II (GO:0045944)",NA
+"482",NA,NA,NA,7,NA,"mRNA splicing, via spliceosome (GO:0000398)",NA
+"483",NA,NA,NA,6,NA,"apoptotic process (GO:0006915)",NA
+"484",NA,NA,NA,6,NA,"positive regulation of gene expression (GO:0010628)",NA
+"485",NA,NA,NA,6,NA,"signal transduction (GO:0007165)",NA
+"486",NA,NA,NA,5,NA,"cell differentiation (GO:0030154)",NA
+"487",NA,NA,NA,5,NA,"DNA integration (GO:0015074)",NA
+"488",NA,NA,NA,5,NA,"inflammatory response (GO:0006954)",NA
+"489",NA,NA,NA,5,NA,"intracellular signal transduction (GO:0035556)",NA
+"490",NA,NA,NA,4,NA,"aorta development (GO:0035904)",NA
+"491",NA,NA,NA,4,NA,"cell adhesion (GO:0007155)",NA
+"492",NA,NA,NA,4,NA,"cell population proliferation (GO:0008283)",NA
+"493",NA,NA,NA,4,NA,"endocytosis (GO:0006897)",NA
+"494",NA,NA,NA,4,NA,"extracellular matrix organization (GO:0030198)",NA
+"495",NA,NA,NA,4,NA,"intracellular protein transport (GO:0006886)",NA
+"496",NA,NA,NA,4,NA,"protein phosphorylation (GO:0006468)",NA
+"497",NA,NA,NA,4,NA,"regulation of transcription by RNA polymerase II (GO:0006357)",NA
+"498",NA,NA,NA,3,NA,"axon guidance (GO:0007411)",NA
+"499",NA,NA,NA,3,NA,"brain development (GO:0007420)",NA
+"500",NA,NA,NA,48,NA,NA,"integral component of membrane (GO:0016021)"
+"501",NA,NA,NA,45,NA,NA,"cytoplasm (GO:0005737)"
+"502",NA,NA,NA,36,NA,NA,"nucleus (GO:0005634)"
+"503",NA,NA,NA,32,NA,NA,"cytosol (GO:0005829)"
+"504",NA,NA,NA,25,NA,NA,"plasma membrane (GO:0005886)"
+"505",NA,NA,NA,22,NA,NA,"No_GOCC"
+"506",NA,NA,NA,19,NA,NA,"membrane (GO:0016020)"
+"507",NA,NA,NA,13,NA,NA,"nucleoplasm (GO:0005654)"
+"508",NA,NA,NA,11,NA,NA,"extracellular exosome (GO:0070062)"
+"509",NA,NA,NA,10,NA,NA,"axon (GO:0030424)"
+"510",NA,NA,NA,10,NA,NA,"endoplasmic reticulum membrane (GO:0005789)"
+"511",NA,NA,NA,9,NA,NA,"endoplasmic reticulum (GO:0005783)"
+"512",NA,NA,NA,9,NA,NA,"integral component of plasma membrane (GO:0005887)"
+"513",NA,NA,NA,8,NA,NA,"cell surface (GO:0009986)"
+"514",NA,NA,NA,8,NA,NA,"Golgi apparatus (GO:0005794)"
+"515",NA,NA,NA,7,NA,NA,"endosome (GO:0005768)"
+"516",NA,NA,NA,7,NA,NA,"lysosome (GO:0005764)"
+"517",NA,NA,NA,7,NA,NA,"mitochondrial inner membrane (GO:0005743)"
+"518",NA,NA,NA,6,NA,NA,"cytoskeleton (GO:0005856)"
+"519",NA,NA,NA,6,NA,NA,"dendrite (GO:0030425)"

@@ -1,0 +1,2 @@
+"orthogroup" "gene_Sid" "isotig"
+"N0.HOG0000000" 

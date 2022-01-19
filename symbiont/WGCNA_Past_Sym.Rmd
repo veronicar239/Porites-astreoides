@@ -200,7 +200,7 @@ head(rownames(dat2))
 
 # select relevant trait data
 ```{r}
-traits <- dplyr::select(traits, zoox.cells.cm2, chla.ug.cm2, chla.ug.cell, protein.mg.cm2, colonyID_sampleID)
+traits <- dplyr::select(traits, extension_mm, density_g.cm3, zoox.cells.cm2, chla.ug.cm2, chla.ug.cell, protein.mg.cm2, colonyID_sampleID)
 dim(traits)
 
 # 10^6 measurements are same data just different units as needed for plotting
@@ -370,7 +370,7 @@ dev.off()
 
 ## Remove non-relevant, non-numeric columns left in traits dataframe
 ```{r}
-traits <- dplyr::select(traits, zoox.cells.cm2, chla.ug.cm2, chla.ug.cell, protein.mg.cm2)
+traits <- dplyr::select(traits, extension_mm, density_g.cm3, zoox.cells.cm2, chla.ug.cm2, chla.ug.cell, protein.mg.cm2)
 
 # 10^6 measurements are same data just different units as needed for plotting
 # traits <- dplyr::select(traits, zoox.cells.cm2, zoox.10.6.cells.cm2,	chla.ug.cm2,	chla.10.6.ug.cm2, chla.ug.cell,	protein.mg.cm2)
@@ -785,6 +785,14 @@ Eigengenes: Module representatives
 plotEigengeneNetworks(mergedMEs, "", marDendro = c(0,4,1,2), marHeatmap = c(3,4,1,2))
 ```
 
+save pdf
+```{r}
+pdf(file="Past_Sym_WGCNA_Eigengene-dendrogram-heatmap_smaller.pdf", width=8, height=7) #width=10, height=9
+plotEigengeneNetworks(mergedMEs, "", marDendro = c(0,4,1,2), marHeatmap = c(3,4,1,2))
+dev.off()
+```
+
+
 ## Look at expression patterns of these genes, as they're clustered
 ```{r}
 module.order <- unlist(tapply(1:ncol(dat),as.factor(mergedColors),I))
@@ -901,7 +909,7 @@ textMatrix = textMatrix,
 setStdMargins = FALSE,
 cex.text = 0.7,
 zlim = c(-0.7,0.7),
-main = paste("Porites astreoides Host Module-Trait correlations"))
+main = paste("Porites astreoides symbionts"))
 
 dev.off()
 ```

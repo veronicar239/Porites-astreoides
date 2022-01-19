@@ -195,6 +195,11 @@ dim(ortho_1.to.1)
 head(ortho_1.to.1)
 ```
 
+```{r}
+#write.csv(file = "Orthogroups_Sid-Past_1-1.csv", x = ortho_1.to.1)
+```
+
+
 1:1 Past
 ```{r}
 ortho.1.to.1_Past.isotigs <- past_seq2iso %>% 
@@ -203,6 +208,9 @@ ortho.1.to.1_Past.isotigs <- past_seq2iso %>%
 head(ortho.1.to.1_Past.isotigs)
 ```
 
+```{r}
+#write.csv(file = "Orthogroups_Sid-Past_1-1_Past-isotigs.csv", x = ortho.1.to.1_Past.isotigs)
+```
 
 1:1 Ppor
 ```{r}
@@ -228,6 +236,10 @@ ortho.1.to.1_Ppor.isotigs <- ortho.1.to.1_Ppor.isotigs %>%
                 gene = gene_Ppor)
 
 head(ortho.1.to.1_Ppor.isotigs)
+```
+
+```{r}
+#write.csv(file = "Orthogroups_Sid-Past_1-1_Ppor-isotigs.csv", x = ortho.1.to.1_Ppor.isotigs)
 ```
 
 
@@ -377,6 +389,20 @@ multi.ortho.Ppor.isotigs <- multi.ortho.Ppor.isotigs %>%
                 gene = gene_Ppor)
 
 head(multi.ortho.Ppor.isotigs)
+```
+
+Merge Past multi.ortho and Sid multi.ortho
+```{r}
+library(dplyr)
+
+multi.ortho.Sid.Past.isotigs <- multi.ortho.Sid %>% 
+  inner_join(multi.ortho.Past.isotigs, by = "orthogroup")
+
+multi.ortho.Sid.Past.isotigs <- dplyr::rename(multi.ortho.Sid.Past.isotigs, gene.Sid = gene.x, gene.Past = gene.y, isotig.Past = isotig)
+
+head(multi.ortho.Sid.Past.isotigs)
+
+#write.csv(file = "Orthogroups_Sid-Past_multi-ortho_Past-isotigs.csv", x = multi.ortho.Sid.Past.isotigs)
 ```
 
 
@@ -1474,6 +1500,79 @@ If there are any shared DEG:
 ```{r}
 # OO_OC_down <- OO_OC %>%
 #     filter(baseMean < 0 & padj < 0.1)
+```
+
+
+##############################################################################
+
+# Annotated transcriptomes
+
+```{r}
+past.annot <- read.csv("~/Documents/Postdoc/ODU_postdoc/projects/Ojo_gene-expression/Porites_astreoides/Past_hybridreference_totalannotated.csv")
+
+#past.annot[sapply(past.annot, is.character)] <- lapply(past.annot[sapply(past.annot, is.character)], as.factor)
+```
+
+
+Dataframe with only isotigs 
+```{r}
+past.annot.contigs <- past.annot %>% 
+  dplyr::filter(grepl("isotig", ContigName))
+
+#past.annot.contigs <- dplyr::rename(past.annot.contigs, isotig = ContigName)
+
+past.annot.contigs$isotig = past.annot.contigs$ContigName
+
+head(past.annot.contigs)
+```
+
+Match isotigs with genes
+```{r}
+past.annot.contigs <- past_seq2iso %>% 
+  inner_join(past.annot.contigs, by = "isotig")
+
+head(past.annot.contigs)
+```
+
+Dataframe with non-isotig genes
+```{r}
+past.annot.genes <- past.annot %>% 
+  dplyr::filter(!grepl("isotig", ContigName))
+
+#past.annot.genes <- dplyr::rename(past.annot.genes, gene = ContigName)
+
+past.annot.genes$gene <- past.annot.genes$ContigName
+past.annot.genes$isotig <- past.annot.genes$ContigName
+
+dim(past.annot.genes)
+```
+
+**full join**
+    - return all rows and columns from the left and right data set
+    - unmatched rows from either left data sets receive NA values in the associated new columns
+
+```{r}
+past.annot.genes.final <- full_join(past.annot.contigs, past.annot.genes, by = c("gene", "ContigLength", "topnrMatch", "topnrEvalue", "topnrAlignmentLength", "topnrPercMatch", "nobadwordnrMatch", "nobadwordnrEvalue", "nobadwordnrAlignLength", "nobadwordnrPercentMatch", "Uniprotmatch", "X._identity", "evalue",  "ID", "Description",  "KEGG", "KEGGKO", "PFAM", "GO", "GOCC", "GOBP", "GOMF", "Keywords"))
+
+dim(past.annot.genes.final)
+```
+
+```{r}
+#write.csv(file = "Past_hybridreference_totalannotated_isotig-Gene.csv", x = past.annot.genes.final)
+```
+
+
+Isotig - Gene - ContigName
+```{r}
+# merge back non-isotig genes so we have full gene names (to relate to DEG table)
+past.annot.final <- full_join(past.annot.contigs, past.annot.genes, by = c("isotig" ,"gene", "ContigName", "ContigLength", "topnrMatch", "topnrEvalue", "topnrAlignmentLength", "topnrPercMatch", "nobadwordnrMatch", "nobadwordnrEvalue", "nobadwordnrAlignLength", "nobadwordnrPercentMatch", "Uniprotmatch", "X._identity", "evalue",  "ID", "Description",  "KEGG", "KEGGKO", "PFAM", "GO", "GOCC", "GOBP", "GOMF", "Keywords")) 
+
+
+head(past.annot.final)
+```
+
+```{r}
+#write.csv(file = "Past_hybridreference_totalannotated_Final.csv", x = past.annot.final)
 ```
 
 
